@@ -1,11 +1,9 @@
 package mod.chiselsandbits.helpers;
 
-import java.util.*;
-
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.items.ItemBitBag;
-import mod.chiselsandbits.items.ItemChiseledBit;
 import mod.chiselsandbits.items.ItemBitBag.BagPos;
+import mod.chiselsandbits.items.ItemChiseledBit;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
@@ -16,6 +14,10 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class BitInventoryFeeder
 {
@@ -36,7 +38,7 @@ public class BitInventoryFeeder
 	public void addItem(
 			final EntityItem ei)
 	{
-		ItemStack is = ModUtil.nonNull( ei.getEntityItem() );
+		ItemStack is = ModUtil.nonNull( ei.getItem() );
 
 		final List<BagPos> bags = ItemBitBag.getBags( player.inventory );
 
@@ -62,7 +64,7 @@ public class BitInventoryFeeder
 		if ( ModUtil.isEmpty( is ) )
 			return;
 
-		ei.setEntityItemStack( is );
+		ei.setItem( is );
 		EntityItemPickupEvent event = new EntityItemPickupEvent( player, ei );
 
 		if ( MinecraftForge.EVENT_BUS.post( event ) )
@@ -74,11 +76,11 @@ public class BitInventoryFeeder
 		{
 			if ( event.getResult() != Result.DENY )
 			{
-				is = ei.getEntityItem();
+				is = ei.getItem();
 
 				if ( is != null && !player.inventory.addItemStackToInventory( is ) )
 				{
-					ei.setEntityItemStack( is );
+					ei.setItem( is );
 					//Never spawn the items for dropped excess items if setting is enabled.
 					if ( !ChiselsAndBits.getConfig().voidExcessBits )
 					{
@@ -89,7 +91,7 @@ public class BitInventoryFeeder
 				{
 					if ( !ei.isSilent() )
 					{
-						ei.worldObj.playSound( (EntityPlayer) null, ei.posX, ei.posY, ei.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ( ( itemRand.nextFloat() - itemRand.nextFloat() ) * 0.7F + 1.0F ) * 2.0F );
+						ei.world.playSound( (EntityPlayer) null, ei.posX, ei.posY, ei.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ( ( itemRand.nextFloat() - itemRand.nextFloat() ) * 0.7F + 1.0F ) * 2.0F );
 					}
 				}
 
@@ -110,7 +112,7 @@ public class BitInventoryFeeder
 		{
 			if ( !ItemChiseledBit.hasBitSpace( player, blk ) )
 			{
-				player.addChatMessage( new TextComponentTranslation( "mod.chiselsandbits.result.void_excess" ) );
+				player.sendMessage( new TextComponentTranslation( "mod.chiselsandbits.result.void_excess" ) );
 				hasSentMessage = true;
 			}
 			if ( !seenBits.contains( blk ))
@@ -127,6 +129,6 @@ public class BitInventoryFeeder
 		if ( world.isRemote ) // no spawning items on the client.
 			return;
 
-		world.spawnEntityInWorld( ei );
+		world.spawnEntity( ei );
 	}
 }

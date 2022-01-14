@@ -1,11 +1,5 @@
 package mod.chiselsandbits.client;
 
-import java.io.EOFException;
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import io.netty.buffer.Unpooled;
 import io.netty.handler.codec.EncoderException;
 import mod.chiselsandbits.core.ChiselsAndBits;
@@ -13,6 +7,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
+
+import java.io.EOFException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClipboardStorage extends Configuration
 {
@@ -40,7 +40,7 @@ public class ClipboardStorage extends Configuration
 		for ( final NBTTagCompound nbt : myitems )
 		{
 			final PacketBuffer b = new PacketBuffer( Unpooled.buffer() );
-			b.writeNBTTagCompoundToBuffer( nbt );
+			b.writeCompoundTag( nbt );
 
 			final int[] o = new int[b.writerIndex()];
 			for ( int x = 0; x < b.writerIndex(); x++ )
@@ -76,7 +76,7 @@ public class ClipboardStorage extends Configuration
 			try
 			{
 				final PacketBuffer b = new PacketBuffer( Unpooled.wrappedBuffer( o ) );
-				final NBTTagCompound c = b.readNBTTagCompoundFromBuffer();
+				final NBTTagCompound c = b.readCompoundTag();
 
 				myItems.add( c );
 			}

@@ -127,7 +127,7 @@ public class SimpleGeneratedModel implements IBakedModel
 						break;
 
 					case NORMAL:
-						b.put( elementIndex, myFace.getFrontOffsetX(), myFace.getFrontOffsetY(), myFace.getFrontOffsetZ() );
+						b.put( elementIndex, myFace.getXOffset(), myFace.getYOffset(), myFace.getZOffset() );
 						break;
 
 					case UV:

@@ -144,7 +144,7 @@ public class StackableCrafting extends CustomRecipe
 	}
 
 	@Override
-	public boolean func_194133_a(
+	public boolean canFit(
 			final int width,
 			final int height )
 	{
@@ -161,7 +161,7 @@ public class StackableCrafting extends CustomRecipe
 	public NonNullList<ItemStack> getRemainingItems(
 			final InventoryCrafting inv )
 	{
-		final NonNullList<ItemStack> aitemstack = NonNullList.func_191197_a( inv.getSizeInventory(), ItemStack.field_190927_a );
+		final NonNullList<ItemStack> aitemstack = NonNullList.withSize( inv.getSizeInventory(), ItemStack.EMPTY );
 
 		for ( int i = 0; i < aitemstack.size(); ++i )
 		{

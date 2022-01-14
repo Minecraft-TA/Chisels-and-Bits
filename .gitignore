@@ -1,6 +1,7 @@
 /bin/
 .idea
 out
+run
 /.gradle/
 /.settings/
 /build/

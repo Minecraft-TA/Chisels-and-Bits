@@ -53,7 +53,7 @@ public class TileEntityBlockChiseledTESR extends TileEntityBlockChiseled
 		renderChunk.update( null, 1 );
 
 		final int old = previousLightLevel;
-		previousLightLevel = worldObj.getLightFromNeighborsFor( EnumSkyBlock.BLOCK, getPos() );
+		previousLightLevel = world.getLightFromNeighborsFor( EnumSkyBlock.BLOCK, getPos() );
 
 		if ( previousLightLevel != old )
 		{

@@ -1,20 +1,9 @@
 package mod.chiselsandbits.debug;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-
-import javax.annotation.Nonnull;
-
 import mod.chiselsandbits.api.APIExceptions.CannotBeChiseled;
 import mod.chiselsandbits.api.APIExceptions.InvalidBitItem;
 import mod.chiselsandbits.api.APIExceptions.SpaceOccupied;
-import mod.chiselsandbits.api.BitQueryResults;
-import mod.chiselsandbits.api.IBitAccess;
-import mod.chiselsandbits.api.IBitBrush;
-import mod.chiselsandbits.api.IBitLocation;
-import mod.chiselsandbits.api.IBitVisitor;
-import mod.chiselsandbits.api.IChiselAndBitsAPI;
-import mod.chiselsandbits.api.ItemType;
+import mod.chiselsandbits.api.*;
 import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.Log;
@@ -33,6 +22,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.Map.Entry;
 
 public abstract class DebugAction
 {
@@ -70,7 +63,7 @@ public abstract class DebugAction
 			final String msg )
 	{
 		final String side = FMLCommonHandler.instance().getEffectiveSide().name() + ": ";
-		player.addChatComponentMessage( new TextComponentString( side + msg ), true );
+		player.sendStatusMessage( new TextComponentString( side + msg ), true );
 	}
 
 	private static void apiAssert(
@@ -555,11 +548,11 @@ public abstract class DebugAction
 			final VoxelBlob out = new VoxelBlob();
 			MCMultipartProxy.proxyMCMultiPart.addFiller( w, loc.getBlockPos(), out );
 
-			player.addChatComponentMessage( new TextComponentString( out.filled() + " blocked" ), true );
-			player.addChatComponentMessage( new TextComponentString( out.air() + " not-blocked" ), true );
+			player.sendStatusMessage( new TextComponentString( out.filled() + " blocked" ), true );
+			player.sendStatusMessage( new TextComponentString( out.air() + " not-blocked" ), true );
 
 			final boolean isMultiPart = MCMultipartProxy.proxyMCMultiPart.isMultiPartTileEntity( w, loc.getBlockPos() );
-			player.addChatComponentMessage( new TextComponentString( isMultiPart ? "Multipart" : "Not-Multipart" ), true );
+			player.sendStatusMessage( new TextComponentString( isMultiPart ? "Multipart" : "Not-Multipart" ), true );
 		}
 
 	};

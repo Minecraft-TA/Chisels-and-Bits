@@ -1,12 +1,5 @@
 package mod.chiselsandbits.integration.mcmultipart;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import mcmultipart.RayTraceHelper;
 import mcmultipart.api.container.IMultipartContainer;
 import mcmultipart.api.container.IPartInfo;
@@ -30,6 +23,12 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class MCMultipart2Proxy implements IMCMultiPart
 {
@@ -81,14 +80,14 @@ public class MCMultipart2Proxy implements IMCMultiPart
 				{
 					final ChiseledBlockPart tx = new ChiseledBlockPart( null );
 					tx.occlusionState = new MultipartContainerBuilder( w, pos, tx, container.get() );
-					tx.setWorldObj( w );
+					tx.setWorld( w );
 					tx.setPos( pos );
 					return tx;
 				}
 				else if ( create )
 				{
 					final ChiseledBlockPart tx = new ChiseledBlockPart( null );
-					tx.setWorldObj( w );
+					tx.setWorld( w );
 					tx.setPos( pos );
 					return tx;
 				}
@@ -147,7 +146,7 @@ public class MCMultipart2Proxy implements IMCMultiPart
 
 					for ( AxisAlignedBB b : partBoxes )
 					{
-						if ( b.intersectsWith( bitBox ) )
+						if ( b.intersects( bitBox ) )
 						{
 							bci.setNext( vb, 1 );
 							break;

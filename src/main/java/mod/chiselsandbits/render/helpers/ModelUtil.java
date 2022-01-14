@@ -1,12 +1,5 @@
 package mod.chiselsandbits.render.helpers;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import mod.chiselsandbits.chiseledblock.BlockBitInfo;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.ReflectionWrapper;
@@ -30,6 +23,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumFacing.Axis;
 import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.fluids.Fluid;
+
+import java.util.*;
 
 @SuppressWarnings( "unchecked" )
 public class ModelUtil implements ICacheClearable
@@ -211,7 +206,7 @@ public class ModelUtil implements ICacheClearable
 		final ItemStack is = ModUtil.getItemFromBlock( state );
 		if ( !ModUtil.isEmpty( is ) )
 		{
-			final IBakedModel secondModel = getOverrides( model ).handleItemState( model, is, Minecraft.getMinecraft().theWorld, Minecraft.getMinecraft().thePlayer );
+			final IBakedModel secondModel = getOverrides( model ).handleItemState( model, is, Minecraft.getMinecraft().world, Minecraft.getMinecraft().player );
 
 			if ( secondModel != null )
 			{
@@ -405,7 +400,7 @@ public class ModelUtil implements ICacheClearable
 			final ItemStack is = ModUtil.getItemFromBlock( state );
 			if ( !ModUtil.isEmpty( is ) )
 			{
-				final IBakedModel itemModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides( is, Minecraft.getMinecraft().theWorld, Minecraft.getMinecraft().thePlayer );
+				final IBakedModel itemModel = Minecraft.getMinecraft().getRenderItem().getItemModelWithOverrides( is, Minecraft.getMinecraft().world, Minecraft.getMinecraft().player );
 
 				try
 				{
@@ -586,7 +581,7 @@ public class ModelUtil implements ICacheClearable
 		if ( ModUtil.isEmpty( target ) )
 			return -1;
 
-		return Minecraft.getMinecraft().getItemColors().getColorFromItemstack( target, tint );
+		return Minecraft.getMinecraft().getItemColors().colorMultiplier( target, tint );
 	}
 
 	public static ChiseledBlockBaked getBreakingModel(

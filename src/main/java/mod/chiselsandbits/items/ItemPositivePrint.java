@@ -1,10 +1,5 @@
 package mod.chiselsandbits.items;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import mod.chiselsandbits.bitbag.BagInventory;
 import mod.chiselsandbits.chiseledblock.BlockBitInfo;
 import mod.chiselsandbits.chiseledblock.BlockChiseled;
@@ -13,13 +8,7 @@ import mod.chiselsandbits.chiseledblock.NBTBlobConverter;
 import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.ClientSide;
-import mod.chiselsandbits.helpers.ActingPlayer;
-import mod.chiselsandbits.helpers.BitInventoryFeeder;
-import mod.chiselsandbits.helpers.ContinousChisels;
-import mod.chiselsandbits.helpers.IContinuousInventory;
-import mod.chiselsandbits.helpers.IItemInInventory;
-import mod.chiselsandbits.helpers.LocalStrings;
-import mod.chiselsandbits.helpers.ModUtil;
+import mod.chiselsandbits.helpers.*;
 import mod.chiselsandbits.integration.mcmultipart.MCMultipartProxy;
 import mod.chiselsandbits.interfaces.IChiselModeItem;
 import mod.chiselsandbits.modes.PositivePatternMode;
@@ -41,6 +30,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class ItemPositivePrint extends ItemNegativePrint implements IChiselModeItem, IItemBlockAccurate
 {
@@ -312,7 +306,7 @@ public class ItemPositivePrint extends ItemNegativePrint implements IChiselModeI
 		for ( final EntityItem ei : spawnlist )
 		{
 			feeder.addItem( ei );
-			ItemBitBag.cleanupInventory( who, ei.getEntityItem() );
+			ItemBitBag.cleanupInventory( who, ei.getItem() );
 		}
 
 	}

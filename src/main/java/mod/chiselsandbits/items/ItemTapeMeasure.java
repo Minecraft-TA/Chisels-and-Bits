@@ -1,18 +1,10 @@
 package mod.chiselsandbits.items;
 
-import java.util.List;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import mod.chiselsandbits.chiseledblock.data.BitLocation;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.ClientSide;
 import mod.chiselsandbits.core.ReflectionWrapper;
-import mod.chiselsandbits.helpers.BitOperation;
-import mod.chiselsandbits.helpers.ChiselToolType;
-import mod.chiselsandbits.helpers.DeprecationHelper;
-import mod.chiselsandbits.helpers.LocalStrings;
-import mod.chiselsandbits.helpers.ModUtil;
+import mod.chiselsandbits.helpers.*;
 import mod.chiselsandbits.interfaces.IChiselModeItem;
 import mod.chiselsandbits.interfaces.IItemScrollWheel;
 import mod.chiselsandbits.modes.TapeMeasureModes;
@@ -36,6 +28,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.List;
 
 public class ItemTapeMeasure extends Item implements IChiselModeItem, IItemScrollWheel
 {
@@ -98,7 +93,7 @@ public class ItemTapeMeasure extends Item implements IChiselModeItem, IItemScrol
 			final Vec3d ray_from = PlayerRay.getLeft();
 			final Vec3d ray_to = PlayerRay.getRight();
 
-			final RayTraceResult mop = playerIn.worldObj.getBlockState( pos ).getBlock().collisionRayTrace( playerIn.getEntityWorld().getBlockState( pos ), playerIn.worldObj, pos, ray_from, ray_to );
+			final RayTraceResult mop = playerIn.world.getBlockState( pos ).getBlock().collisionRayTrace( playerIn.getEntityWorld().getBlockState( pos ), playerIn.world, pos, ray_from, ray_to );
 			if ( mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK )
 			{
 				final BitLocation loc = new BitLocation( mop, true, BitOperation.CHISEL );
@@ -116,7 +111,7 @@ public class ItemTapeMeasure extends Item implements IChiselModeItem, IItemScrol
 	{
 		if ( ChiselsAndBits.getConfig().itemNameModeDisplay )
 		{
-			return displayName + " - " + TapeMeasureModes.getMode( item ).string.getLocal() + " - " + DeprecationHelper.translateToLocal( "chiselsandbits.color." + getTapeColor( item ).getUnlocalizedName() );
+			return displayName + " - " + TapeMeasureModes.getMode( item ).string.getLocal() + " - " + DeprecationHelper.translateToLocal( "chiselsandbits.color." + getTapeColor( item ).getTranslationKey() );
 		}
 
 		return displayName;

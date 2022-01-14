@@ -1,10 +1,5 @@
 package mod.chiselsandbits.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import mod.chiselsandbits.bitbag.BagCapabilityProvider;
 import mod.chiselsandbits.bitbag.BagInventory;
 import mod.chiselsandbits.bitbag.BagStorage;
@@ -37,6 +32,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemBitBag extends Item
 {
@@ -136,7 +135,7 @@ public class ItemBitBag extends Item
 		final EntityItem entityItem = event.getItem();
 		if ( entityItem != null )
 		{
-			final ItemStack is = entityItem.getEntityItem();
+			final ItemStack is = entityItem.getItem();
 			final EntityPlayer player = event.getEntityPlayer();
 			if ( is != null && is.getItem() instanceof ItemChiseledBit )
 			{
@@ -153,7 +152,7 @@ public class ItemBitBag extends Item
 					{
 						if ( !entityItem.isDead )
 						{
-							modified = updateEntity( player, entityItem, i.inv.insertItem( ModUtil.nonNull( entityItem.getEntityItem() ) ), originalSize ) || modified;
+							modified = updateEntity( player, entityItem, i.inv.insertItem( ModUtil.nonNull( entityItem.getItem() ) ), originalSize ) || modified;
 						}
 					}
 				}
@@ -181,7 +180,7 @@ public class ItemBitBag extends Item
 
 						if ( !entityItem.isDead )
 						{
-							modified = updateEntity( player, entityItem, i.inv.insertItem( ModUtil.nonNull( entityItem.getEntityItem() ) ), originalSize ) || modified;
+							modified = updateEntity( player, entityItem, i.inv.insertItem( ModUtil.nonNull( entityItem.getItem() ) ), originalSize ) || modified;
 						}
 					}
 				}
@@ -205,8 +204,8 @@ public class ItemBitBag extends Item
 		if ( is == null )
 		{
 			ei.setDead();
-			// is = new ItemStack( ei.getEntityItem().getItem(), 0 );
-			// ei.setEntityItemStack( is );
+			// is = new ItemStack( ei.getItem().getItem(), 0 );
+			// ei.setItemStack( is );
 			// ei.setDead();
 			//
 			// net.minecraftforge.fml.common.FMLCommonHandler.instance().firePlayerItemPickupEvent(
@@ -214,7 +213,7 @@ public class ItemBitBag extends Item
 			//
 			// if ( !ei.isSilent() )
 			// {
-			// ei.worldObj.playSound( (EntityPlayer) null, ei.posX, ei.posY,
+			// ei.world.playSound( (EntityPlayer) null, ei.posX, ei.posY,
 			// ei.posZ, SoundEvents.ENTITY_ITEM_PICKUP, SoundCategory.PLAYERS,
 			// 0.2F, ( ( itemRand.nextFloat() - itemRand.nextFloat() ) * 0.7F +
 			// 1.0F ) * 2.0F );
@@ -226,8 +225,8 @@ public class ItemBitBag extends Item
 		}
 		else
 		{
-			final int changed = ModUtil.getStackSize( is ) - ModUtil.getStackSize( ei.getEntityItem() );
-			ei.setEntityItemStack( is );
+			final int changed = ModUtil.getStackSize( is ) - ModUtil.getStackSize( ei.getItem() );
+			ei.setItem( is );
 			return changed != 0;
 		}
 	}
@@ -339,7 +338,7 @@ public class ItemBitBag extends Item
 			CreativeTabs itemIn,
 			NonNullList<ItemStack> tab )
 	{
-		if ( this.func_194125_a( itemIn ) )
+		if ( this.isInCreativeTab( itemIn ) )
 		{
 			tab.add( new ItemStack( this ) );
 

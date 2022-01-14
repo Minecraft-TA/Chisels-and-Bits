@@ -1,17 +1,8 @@
 package mod.chiselsandbits.chiseledblock;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import mod.chiselsandbits.api.BoxType;
 import mod.chiselsandbits.api.IMultiStateBlock;
-import mod.chiselsandbits.chiseledblock.data.BitCollisionIterator;
-import mod.chiselsandbits.chiseledblock.data.BitLocation;
-import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
-import mod.chiselsandbits.chiseledblock.data.VoxelBlobStateReference;
-import mod.chiselsandbits.chiseledblock.data.VoxelNeighborRenderTracker;
+import mod.chiselsandbits.chiseledblock.data.*;
 import mod.chiselsandbits.chiseledblock.properties.UnlistedBlockStateID;
 import mod.chiselsandbits.chiseledblock.properties.UnlistedVoxelBlob;
 import mod.chiselsandbits.chiseledblock.properties.UnlistedVoxelNeighborState;
@@ -43,13 +34,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.*;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -64,6 +50,10 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 public class BlockChiseled extends Block implements ITileEntityProvider, IMultiStateBlock
 {
@@ -80,7 +70,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 	public final String name;
 
 	@Override
-	public BlockFaceShape func_193383_a(
+	public BlockFaceShape getBlockFaceShape(
 			IBlockAccess world,
 			IBlockState state,
 			BlockPos pos,
@@ -584,7 +574,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 	@Override
 	public boolean addLandingEffects(
 			final IBlockState state,
-			final WorldServer worldObj,
+			final WorldServer world,
 			final BlockPos blockPosition,
 			final IBlockState iblockstate,
 			final EntityLivingBase entity,
@@ -592,8 +582,8 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 	{
 		try
 		{
-			final IBlockState texture = getTileEntity( worldObj, blockPosition ).getBlockState( Blocks.STONE );
-			worldObj.spawnParticle( EnumParticleTypes.BLOCK_DUST, entity.posX, entity.posY, entity.posZ, numberOfParticles, 0.0D, 0.0D, 0.0D, 0.15000000596046448D, new int[] { ModUtil.getStateId( texture ) } );
+			final IBlockState texture = getTileEntity( world, blockPosition ).getBlockState( Blocks.STONE );
+			world.spawnParticle( EnumParticleTypes.BLOCK_DUST, entity.posX, entity.posY, entity.posZ, numberOfParticles, 0.0D, 0.0D, 0.0D, 0.15000000596046448D, new int[] { ModUtil.getStateId( texture ) } );
 			return true;
 		}
 		catch ( final ExceptionNoTileEntity e )
@@ -710,7 +700,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 
 		for ( final AxisAlignedBB bb : te.getBoxes( BoxType.COLLISION ) )
 		{
-			if ( bb.intersectsWith( localMask ) )
+			if ( bb.intersects( localMask ) )
 			{
 				list.add( bb.offset( pos.getX(), pos.getY(), pos.getZ() ) );
 			}
@@ -720,7 +710,6 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 	/**
 	 * this method dosn't use AxisAlignedBB internally to prevent GC thrashing.
 	 *
-	 * @param worldIn
 	 * @param pos
 	 *
 	 *            mask and list should be null if not looking for collisions
@@ -785,7 +774,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 						(double) maxY + pos.getY(),
 						(double) maxZ + pos.getZ() );
 
-				if ( mask.intersectsWith( bb ) )
+				if ( mask.intersects( bb ) )
 				{
 					list.add( bb );
 				}
@@ -890,9 +879,9 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 
 			if ( r != null )
 			{
-				final double xLen = a.xCoord - r.hitVec.xCoord;
-				final double yLen = a.yCoord - r.hitVec.yCoord;
-				final double zLen = a.zCoord - r.hitVec.zCoord;
+				final double xLen = a.x - r.hitVec.x;
+				final double yLen = a.y - r.hitVec.y;
+				final double zLen = a.z - r.hitVec.z;
 
 				final double thisDist = xLen * xLen + yLen * yLen + zLen * zLen;
 				if ( br == null || lastDist > thisDist && r != null )
@@ -1001,7 +990,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 		public boolean success = false;
 		public TileEntityBlockChiseled te = null;
 	};
-	
+
 	public static ReplaceWithChisledValue replaceWithChisled(
 			final @Nonnull World world,
 			final @Nonnull BlockPos pos,
@@ -1013,7 +1002,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 		Block target = originalState.getBlock();
 		final boolean isAir = world.isAirBlock( pos ) || actingState.getBlock().isReplaceable( world, pos );
 		ReplaceWithChisledValue rv = new ReplaceWithChisledValue();
-		
+
 		if ( BlockBitInfo.supportsBlock( actingState ) || isAir )
 		{
 			BlockChiseled blk = ChiselsAndBits.getBlocks().getConversion( originalState );
@@ -1061,7 +1050,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 
 				rv.success = true;
 				rv.te = tec;
-				
+
 				return rv;
 			}
 		}
@@ -1168,8 +1157,8 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 
 			// since we can't call getDigSpeed on the acting state, we can just
 			// do some math to try and roughly estimate it.
-			float denom = player.inventory.getStrVsBlock( passedState );
-			float numer = player.inventory.getStrVsBlock( state );
+			float denom = player.inventory.getDestroySpeed( passedState );
+			float numer = player.inventory.getDestroySpeed( state );
 
 			if ( !state.getBlock().canHarvestBlock( new HarvestWorld( state ), pos, player ) )
 			{
@@ -1229,7 +1218,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 		{
 			for ( final AxisAlignedBB b : tebc.getBoxes( BoxType.SWIMMING ) )
 			{
-				if ( b.intersectsWith( bx ) )
+				if ( b.intersects( bx ) )
 				{
 					return true;
 				}
@@ -1251,11 +1240,11 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 		if ( testingHead && materialIn == Material.WATER )
 		{
 			Vec3d head = entity.getPositionVector();
-			head = new Vec3d( head.xCoord - pos.getX(), yToTest - pos.getY(), head.zCoord - pos.getZ() );
+			head = new Vec3d( head.x - pos.getX(), yToTest - pos.getY(), head.z - pos.getZ() );
 
 			for ( final AxisAlignedBB b : tebc.getBoxes( BoxType.SWIMMING ) )
 			{
-				if ( b.isVecInside( head ) )
+				if ( b.contains( head ) )
 				{
 					return true;
 				}
@@ -1275,7 +1264,7 @@ public class BlockChiseled extends Block implements ITileEntityProvider, IMultiS
 				what = what.offset( -pos.getX(), -pos.getY(), -pos.getZ() );
 				for ( final AxisAlignedBB b : tebc.getBoxes( BoxType.SWIMMING ) )
 				{
-					if ( b.intersectsWith( what ) )
+					if ( b.intersects( what ) )
 					{
 						return true;
 					}

@@ -12,7 +12,7 @@ public class ItemColorChisled implements IItemColor
 {
 
 	@Override
-	public int getColorFromItemstack(
+	public int colorMultiplier(
 			final ItemStack stack,
 			final int tint )
 	{

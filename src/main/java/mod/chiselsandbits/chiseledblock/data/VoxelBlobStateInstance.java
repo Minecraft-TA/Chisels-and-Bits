@@ -1,21 +1,17 @@
 package mod.chiselsandbits.chiseledblock.data;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.lang.ref.SoftReference;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.zip.InflaterInputStream;
-
 import io.netty.buffer.Unpooled;
 import mod.chiselsandbits.api.BoxType;
 import mod.chiselsandbits.chiseledblock.BoxCollection;
 import mod.chiselsandbits.core.Log;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.math.AxisAlignedBB;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.lang.ref.SoftReference;
+import java.util.*;
+import java.util.zip.InflaterInputStream;
 
 public final class VoxelBlobStateInstance implements Comparable<VoxelBlobStateInstance>
 {
@@ -247,7 +243,7 @@ public final class VoxelBlobStateInstance implements Comparable<VoxelBlobStateIn
 					arrayPeek.read( peekBytes );
 
 					final PacketBuffer header = new PacketBuffer( Unpooled.wrappedBuffer( peekBytes ) );
-					format = header.readVarIntFromBuffer();
+					format = header.readVarInt();
 				}
 				catch ( final IOException e )
 				{

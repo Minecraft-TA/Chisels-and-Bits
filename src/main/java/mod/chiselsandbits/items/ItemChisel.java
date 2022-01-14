@@ -150,7 +150,7 @@ public class ItemChisel extends ItemTool implements IItemScrollWheel, IChiselMod
 					final Vec3d ray_from = PlayerRay.getLeft();
 					final Vec3d ray_to = PlayerRay.getRight();
 
-					final RayTraceResult mop = player.worldObj.getBlockState( pos ).getBlock().collisionRayTrace( player.getEntityWorld().getBlockState( pos ), player.worldObj, pos, ray_from, ray_to );
+					final RayTraceResult mop = player.world.getBlockState( pos ).getBlock().collisionRayTrace( player.getEntityWorld().getBlockState( pos ), player.world, pos, ray_from, ray_to );
 					if ( mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK )
 					{
 						final BitLocation loc = new BitLocation( mop, true, BitOperation.CHISEL );
@@ -161,7 +161,7 @@ public class ItemChisel extends ItemTool implements IItemScrollWheel, IChiselMod
 					return true;
 				}
 
-				if ( !player.worldObj.isRemote )
+				if ( !player.world.isRemote )
 				{
 					return true;
 				}
@@ -170,10 +170,10 @@ public class ItemChisel extends ItemTool implements IItemScrollWheel, IChiselMod
 				final Vec3d ray_from = PlayerRay.getLeft();
 				final Vec3d ray_to = PlayerRay.getRight();
 
-				final RayTraceResult mop = player.worldObj.getBlockState( pos ).getBlock().collisionRayTrace( player.worldObj.getBlockState( pos ), player.worldObj, pos, ray_from, ray_to );
+				final RayTraceResult mop = player.world.getBlockState( pos ).getBlock().collisionRayTrace( player.world.getBlockState( pos ), player.world, pos, ray_from, ray_to );
 				if ( mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK )
 				{
-					useChisel( mode, player, player.worldObj, pos, mop.sideHit, (float) ( mop.hitVec.xCoord - pos.getX() ), (float) ( mop.hitVec.yCoord - pos.getY() ), (float) ( mop.hitVec.zCoord - pos.getZ() ), hand );
+					useChisel( mode, player, player.world, pos, mop.sideHit, (float) ( mop.hitVec.x - pos.getX() ), (float) ( mop.hitVec.y - pos.getY() ), (float) ( mop.hitVec.z - pos.getZ() ), hand );
 				}
 			}
 
@@ -341,9 +341,9 @@ public class ItemChisel extends ItemTool implements IItemScrollWheel, IChiselMod
 			double hitZ = z * one_16th;
 
 			final double offset = 0.5;
-			hitX += side.getFrontOffsetX() * offset;
-			hitY += side.getFrontOffsetY() * offset;
-			hitZ += side.getFrontOffsetZ() * offset;
+			hitX += side.getXOffset() * offset;
+			hitY += side.getYOffset() * offset;
+			hitZ += side.getZOffset() * offset;
 
 			if ( output == null || !ItemChiseledBit.sameBit( output, blk ) || ModUtil.getStackSize( output ) == 64 )
 			{

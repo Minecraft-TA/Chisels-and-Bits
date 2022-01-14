@@ -48,7 +48,7 @@ public class ChiselsAndBits
 {
 	public static final @Nonnull String MODNAME = "Chisels & Bits";
 	public static final @Nonnull String MODID = "chiselsandbits";
-	public static final @Nonnull String VERSION = "@VERSION@";
+	public static final @Nonnull String VERSION = "14.33";
 
 	public static final String DEPENDENCIES = "required-after:Forge@[12.17.0.1909,);before:mcmultipart;after:JEI@[3.7.8.234,)"; // buildVersion
 

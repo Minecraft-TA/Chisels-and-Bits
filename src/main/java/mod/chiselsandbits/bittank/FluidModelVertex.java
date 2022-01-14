@@ -24,7 +24,7 @@ class FluidModelVertex
 		yMultiplier = y;
 		this.z = z;
 
-		final double texMultiplier = side.getFrontOffsetY() == 0 ? 8 : 16;
+		final double texMultiplier = side.getYOffset() == 0 ? 8 : 16;
 
 		u = u1 * texMultiplier;
 		v = v1 * texMultiplier;

@@ -1,9 +1,5 @@
 package mod.chiselsandbits.network.packets;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
 import mod.chiselsandbits.helpers.ModUtil;
 import mod.chiselsandbits.network.ModPacket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +12,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
+
 public class PacketAccurateSneakPlace extends ModPacket
 {
 
@@ -25,7 +24,7 @@ public class PacketAccurateSneakPlace extends ModPacket
 		EnumActionResult placeItem(
 				@Nonnull ItemStack inHand,
 				@Nonnull EntityPlayer playerEntity,
-				@Nonnull World worldObj,
+				@Nonnull World world,
 				@Nonnull BlockPos pos,
 				@Nonnull EnumHand hand,
 				@Nonnull EnumFacing side,
@@ -60,7 +59,7 @@ public class PacketAccurateSneakPlace extends ModPacket
 				}
 
 				final IItemBlockAccurate ibc = (IItemBlockAccurate) stack.getItem();
-				ibc.placeItem( inHand, playerEntity, playerEntity.worldObj, pos, hand, side, hitX, hitY, hitZ, offgrid );
+				ibc.placeItem( inHand, playerEntity, playerEntity.world, pos, hand, side, hitX, hitY, hitZ, offgrid );
 
 				if ( !playerEntity.capabilities.isCreativeMode && ModUtil.getStackSize( inHand ) <= 0 )
 				{
@@ -74,7 +73,7 @@ public class PacketAccurateSneakPlace extends ModPacket
 	public void getPayload(
 			final PacketBuffer buffer )
 	{
-		buffer.writeItemStackToBuffer( stack );
+		buffer.writeItemStack( stack );
 		buffer.writeBlockPos( pos );
 		buffer.writeEnumValue( side );
 		buffer.writeEnumValue( hand );
@@ -90,7 +89,7 @@ public class PacketAccurateSneakPlace extends ModPacket
 	{
 		try
 		{
-			stack = buffer.readItemStackFromBuffer();
+			stack = buffer.readItemStack();
 			pos = buffer.readBlockPos();
 			side = buffer.readEnumValue( EnumFacing.class );
 			hand = buffer.readEnumValue( EnumHand.class );

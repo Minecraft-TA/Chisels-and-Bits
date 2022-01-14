@@ -1,10 +1,8 @@
 package mod.chiselsandbits.crafting;
 
-import java.util.List;
-
-import mod.chiselsandbits.api.StateCount;
 import mod.chiselsandbits.api.IBitAccess;
 import mod.chiselsandbits.api.ItemType;
+import mod.chiselsandbits.api.StateCount;
 import mod.chiselsandbits.chiseledblock.BlockBitInfo;
 import mod.chiselsandbits.chiseledblock.ItemBlockChiseled;
 import mod.chiselsandbits.chiseledblock.data.BitIterator;
@@ -24,6 +22,8 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+
+import java.util.List;
 
 public class BitSawCrafting extends CustomRecipe
 {
@@ -169,20 +169,20 @@ public class BitSawCrafting extends CustomRecipe
 		switch ( direction )
 		{
 			case X:
-				split_pos = MathHelper.clamp_int( ( box.maxX + box.minX ) / 2, 0, 15 );
+				split_pos = MathHelper.clamp( ( box.maxX + box.minX ) / 2, 0, 15 );
 				scale = ( box.maxX - box.minX ) / 2;
 				break;
 			case Y:
-				split_pos = MathHelper.clamp_int( ( box.maxY + box.minY ) / 2, 0, 15 );
+				split_pos = MathHelper.clamp( ( box.maxY + box.minY ) / 2, 0, 15 );
 				scale = ( box.maxY - box.minY ) / 2;
 				break;
 			case Z:
-				split_pos = MathHelper.clamp_int( ( box.maxZ + box.minZ ) / 2, 0, 15 );
+				split_pos = MathHelper.clamp( ( box.maxZ + box.minZ ) / 2, 0, 15 );
 				scale = ( box.maxZ - box.minZ ) / 2;
 				break;
 		}
 
-		final int split_pos_plus_one = MathHelper.clamp_int( split_pos + 1, 0, 15 );
+		final int split_pos_plus_one = MathHelper.clamp( split_pos + 1, 0, 15 );
 
 		final BitIterator bi = new BitIterator();
 		while ( bi.hasNext() )
@@ -279,7 +279,7 @@ public class BitSawCrafting extends CustomRecipe
 	}
 
 	@Override
-	public boolean func_194133_a(
+	public boolean canFit(
 			final int width,
 			final int height )
 	{
@@ -296,7 +296,7 @@ public class BitSawCrafting extends CustomRecipe
 	public NonNullList<ItemStack> getRemainingItems(
 			final InventoryCrafting inv )
 	{
-		final NonNullList<ItemStack> aitemstack = NonNullList.func_191197_a( inv.getSizeInventory(), ItemStack.field_190927_a );
+		final NonNullList<ItemStack> aitemstack = NonNullList.withSize( inv.getSizeInventory(), ItemStack.EMPTY );
 
 		for ( int i = 0; i < aitemstack.size(); ++i )
 		{

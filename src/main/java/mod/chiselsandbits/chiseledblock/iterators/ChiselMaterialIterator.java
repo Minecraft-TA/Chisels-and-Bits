@@ -61,7 +61,7 @@ public class ChiselMaterialIterator extends BaseChiselIterator implements Chisel
 		this.side = side;
 		final List<Integer> selectedpositions = new ArrayList<Integer>();
 
-		final int tx = side.getFrontOffsetX(), ty = side.getFrontOffsetY(), tz = side.getFrontOffsetZ();
+		final int tx = side.getXOffset(), ty = side.getYOffset(), tz = side.getZOffset();
 
 		int x = sx, y = sy, z = sz;
 

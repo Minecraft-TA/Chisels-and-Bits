@@ -70,7 +70,7 @@ public class TileEntitySpecialRenderBitTank extends FastTESR<TileEntityBitTank>
 		if ( fluidStack != null )
 		{
 			final Fluid fluid = fluidStack.getFluid();
-			final int pass = fluid.getBlock().getBlockLayer() == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
+			final int pass = fluid.getBlock().getRenderLayer() == BlockRenderLayer.TRANSLUCENT ? 1 : 0;
 
 			if ( MinecraftForgeClient.getRenderPass() != pass )
 			{
@@ -99,7 +99,7 @@ public class TileEntitySpecialRenderBitTank extends FastTESR<TileEntityBitTank>
 			for ( final FluidModelVertex vert : model )
 			{
 				final EnumFacing face = vert.face;
-				final TextureAtlasSprite sprite = face.getFrontOffsetY() != 0 ? still : flowing;
+				final TextureAtlasSprite sprite = face.getYOffset() != 0 ? still : flowing;
 
 				for ( final VertexFormatElement e : buffer.getVertexFormat().getElements() )
 				{
@@ -110,7 +110,7 @@ public class TileEntitySpecialRenderBitTank extends FastTESR<TileEntityBitTank>
 							break;
 
 						case NORMAL:
-							buffer.normal( face.getFrontOffsetX(), face.getFrontOffsetY(), face.getFrontOffsetZ() );
+							buffer.normal( face.getXOffset(), face.getYOffset(), face.getZOffset() );
 							break;
 
 						case POSITION:

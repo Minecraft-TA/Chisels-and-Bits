@@ -313,7 +313,7 @@ public class ChiseledBlockBaked extends BaseBakedBlockModel
 										// this fixes a bug with Forge AO?? and
 										// solid blocks.. I have no idea why...
 										final float normalShift = 0.999f;
-										faceBuilder.put( elementIndex, normalShift * myFace.getFrontOffsetX(), normalShift * myFace.getFrontOffsetY(), normalShift * myFace.getFrontOffsetZ() );
+										faceBuilder.put( elementIndex, normalShift * myFace.getXOffset(), normalShift * myFace.getYOffset(), normalShift * myFace.getZOffset() );
 										break;
 
 									case UV:

@@ -1,9 +1,5 @@
 package mod.chiselsandbits.client;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import mod.chiselsandbits.chiseledblock.data.BitLocation;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.ClientSide;
@@ -23,6 +19,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class TapeMeasures
 {
@@ -120,7 +120,7 @@ public class TapeMeasures
 				final EntityPlayer player = ClientSide.instance.getPlayer();
 				final Vec3d eyes = player.getPositionEyes( partialTicks );
 				final AxisAlignedBB box = getBoundingBox();
-				if ( box.isVecInside( eyes ) )
+				if ( box.contains( eyes ) )
 				{
 					distance = 0.0;
 				}
@@ -190,7 +190,7 @@ public class TapeMeasures
 			// NOT 100% Accurate, if anyone wants to try and resolve this, yay
 			chatMsg.setStyle( new Style().setColor( newMeasure.color.chatColor ) );
 
-			player.addChatComponentMessage( chatMsg, true );
+			player.sendStatusMessage( chatMsg, true );
 		}
 
 		measures.add( newMeasure );
@@ -288,7 +288,7 @@ public class TapeMeasures
 		final double y = player.lastTickPosY + ( player.posY - player.lastTickPosY ) * partialTicks;
 		final double z = player.lastTickPosZ + ( player.posZ - player.lastTickPosZ ) * partialTicks;
 
-		final int val = m.color.func_193350_e();
+		final int val = m.color.getColorValue();
 		final int red = val >> 16 & 0xff;
 		final int green = val >> 8 & 0xff;
 		final int blue = val & 0xff;
@@ -304,7 +304,7 @@ public class TapeMeasures
 
 			final double Len = a.distanceTo( b ) + bitSize;
 
-			renderSize( player, partialTicks, ( a.xCoord + b.xCoord ) * 0.5 - x, ( a.yCoord + b.yCoord ) * 0.5 - y, ( a.zCoord + b.zCoord ) * 0.5 - z, Len, red, green, blue );
+			renderSize( player, partialTicks, ( a.x + b.x ) * 0.5 - x, ( a.y + b.y ) * 0.5 - y, ( a.z + b.z ) * 0.5 - z, Len, red, green, blue );
 
 			GlStateManager.enableDepth();
 			GlStateManager.enableCull();
@@ -349,9 +349,9 @@ public class TapeMeasures
 			final AxisAlignedBB box )
 	{
 		// snap eyes into the box...
-		final double boxPointX = Math.min( box.maxX, Math.max( box.minX, eyes.xCoord ) );
-		final double boxPointY = Math.min( box.maxY, Math.max( box.minY, eyes.yCoord ) );
-		final double boxPointZ = Math.min( box.maxZ, Math.max( box.minZ, eyes.zCoord ) );
+		final double boxPointX = Math.min( box.maxX, Math.max( box.minX, eyes.x ) );
+		final double boxPointY = Math.min( box.maxY, Math.max( box.minY, eyes.y ) );
+		final double boxPointZ = Math.min( box.maxZ, Math.max( box.minZ, eyes.z ) );
 
 		// then get the distance to it.
 		return Math.sqrt( eyes.squareDistanceTo( boxPointX, boxPointY, boxPointZ ) );
@@ -390,7 +390,7 @@ public class TapeMeasures
 		final double letterSize = 5.0;
 		final double zScale = 0.001;
 
-		final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRendererObj;
+		final FontRenderer fontRenderer = Minecraft.getMinecraft().fontRenderer;
 		final String size = getSize( len );
 
 		GlStateManager.pushMatrix();

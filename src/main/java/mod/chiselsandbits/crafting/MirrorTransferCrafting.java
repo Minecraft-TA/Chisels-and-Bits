@@ -144,7 +144,7 @@ public class MirrorTransferCrafting extends CustomRecipe
 	}
 
 	@Override
-	public boolean func_194133_a(
+	public boolean canFit(
 			final int width,
 			final int height )
 	{
@@ -161,7 +161,7 @@ public class MirrorTransferCrafting extends CustomRecipe
 	public NonNullList<ItemStack> getRemainingItems(
 			final InventoryCrafting craftingInv )
 	{
-		final NonNullList<ItemStack> aitemstack = NonNullList.func_191197_a( craftingInv.getSizeInventory(), ItemStack.field_190927_a );
+		final NonNullList<ItemStack> aitemstack = NonNullList.withSize( craftingInv.getSizeInventory(), ItemStack.EMPTY );
 
 		for ( int i = 0; i < aitemstack.size(); ++i )
 		{

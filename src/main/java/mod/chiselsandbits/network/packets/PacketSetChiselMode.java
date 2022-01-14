@@ -32,7 +32,7 @@ public class PacketSetChiselMode extends ModPacket
 
 			if ( originalMode != mode && chatNotification )
 			{
-				Minecraft.getMinecraft().thePlayer.addChatComponentMessage( new TextComponentTranslation( mode.getName().toString() ), true );
+				Minecraft.getMinecraft().player.sendStatusMessage( new TextComponentTranslation( mode.getName().toString() ), true );
 			}
 		}
 	}

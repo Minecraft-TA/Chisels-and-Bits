@@ -28,16 +28,16 @@ public class PacketBagGuiStack extends ModPacket
 	public void getPayload(
 			final PacketBuffer buffer )
 	{
-		buffer.writeVarIntToBuffer( index );
+		buffer.writeVarInt( index );
 
 		if ( is == null )
 		{
-			buffer.writeVarIntToBuffer( 0 );
+			buffer.writeVarInt( 0 );
 		}
 		else
 		{
-			buffer.writeVarIntToBuffer( ModUtil.getStackSize( is ) );
-			buffer.writeVarIntToBuffer( ItemChiseledBit.getStackState( is ) );
+			buffer.writeVarInt( ModUtil.getStackSize( is ) );
+			buffer.writeVarInt( ItemChiseledBit.getStackState( is ) );
 		}
 	}
 
@@ -45,9 +45,9 @@ public class PacketBagGuiStack extends ModPacket
 	public void readPayload(
 			final PacketBuffer buffer )
 	{
-		index = buffer.readVarIntFromBuffer();
+		index = buffer.readVarInt();
 
-		final int size = buffer.readVarIntFromBuffer();
+		final int size = buffer.readVarInt();
 
 		if ( size <= 0 )
 		{
@@ -55,7 +55,7 @@ public class PacketBagGuiStack extends ModPacket
 		}
 		else
 		{
-			is = ItemChiseledBit.createStack( buffer.readVarIntFromBuffer(), size, false );
+			is = ItemChiseledBit.createStack( buffer.readVarInt(), size, false );
 		}
 	}
 

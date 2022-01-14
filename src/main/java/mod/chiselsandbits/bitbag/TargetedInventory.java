@@ -88,10 +88,10 @@ public class TargetedInventory implements IInventory
 	}
 
 	@Override
-	public boolean isUseableByPlayer(
+	public boolean isUsableByPlayer(
 			final EntityPlayer player )
 	{
-		return src.isUseableByPlayer( player );
+		return src.isUsableByPlayer( player );
 	}
 
 	@Override
@@ -144,9 +144,9 @@ public class TargetedInventory implements IInventory
 	}
 
 	@Override
-	public boolean func_191420_l()
+	public boolean isEmpty()
 	{
-		return src.func_191420_l();
+		return src.isEmpty();
 	}
 
 }

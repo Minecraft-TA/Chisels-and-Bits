@@ -1,8 +1,5 @@
 package mod.chiselsandbits.chiseledblock;
 
-import java.util.HashMap;
-import java.util.Random;
-
 import gnu.trove.map.TIntObjectMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 import mod.chiselsandbits.api.IgnoreBlockLogic;
@@ -11,15 +8,7 @@ import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.Log;
 import mod.chiselsandbits.helpers.ModUtil;
 import mod.chiselsandbits.render.helpers.ModelUtil;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockGlass;
-import net.minecraft.block.BlockGlowstone;
-import net.minecraft.block.BlockGrass;
-import net.minecraft.block.BlockIce;
-import net.minecraft.block.BlockMycelium;
-import net.minecraft.block.BlockSlime;
-import net.minecraft.block.BlockSnowBlock;
-import net.minecraft.block.BlockStainedGlass;
+import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,6 +20,9 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+
+import java.util.HashMap;
+import java.util.Random;
 
 public class BlockBitInfo
 {
@@ -215,7 +207,7 @@ public class BlockBitInfo
 			boolean itemExistsOrNotSpecialDrops = quantityDroppedTest && quantityDroppedWithBonusTest && quantityDropped2Test || isNotSlab;
 
 			// ignore blocks with custom collision.
-			pb.onEntityCollidedWithBlock( null, null, null, null );
+			pb.onEntityCollision( null, null, null, null );
 			boolean noCustomCollision = getDeclaringClass( blkClass, pb.MethodName, World.class, BlockPos.class, IBlockState.class, Entity.class ) == Block.class || blkClass == BlockSlime.class;
 
 			// full cube specifically is tied to lighting... so for glass

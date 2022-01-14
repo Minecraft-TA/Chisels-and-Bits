@@ -1,9 +1,5 @@
 package mod.chiselsandbits.client;
 
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
 import mod.chiselsandbits.core.ChiselsAndBits;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
@@ -18,6 +14,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
 
 public class RenderHelper
 {
@@ -98,8 +97,8 @@ public class RenderHelper
 			GlStateManager.depthMask( false );
 			GlStateManager.shadeModel( GL11.GL_FLAT );
 
-			final Vec3d a2 = a.addVector( -x + blockPos.getX(), -y + blockPos.getY(), -z + blockPos.getZ() );
-			final Vec3d b2 = b.addVector( -x + blockPos.getX(), -y + blockPos.getY(), -z + blockPos.getZ() );
+			final Vec3d a2 = a.add( -x + blockPos.getX(), -y + blockPos.getY(), -z + blockPos.getZ() );
+			final Vec3d b2 = b.add( -x + blockPos.getX(), -y + blockPos.getY(), -z + blockPos.getZ() );
 			if ( !NormalBoundingBox )
 			{
 				RenderHelper.renderLine( a2, b2, red, green, blue, alpha );
@@ -121,14 +120,14 @@ public class RenderHelper
 			final int alpha,
 			final BufferBuilder renderer,
 			final List<BakedQuad> quads,
-			final World worldObj,
+			final World world,
 			final BlockPos blockPos )
 	{
 		int i = 0;
 		for ( final int j = quads.size(); i < j; ++i )
 		{
 			final BakedQuad bakedquad = quads.get( i );
-			final int color = bakedquad.getTintIndex() == -1 ? alpha | 0xffffff : getTint( alpha, bakedquad.getTintIndex(), worldObj, blockPos );
+			final int color = bakedquad.getTintIndex() == -1 ? alpha | 0xffffff : getTint( alpha, bakedquad.getTintIndex(), world, blockPos );
 			net.minecraftforge.client.model.pipeline.LightUtil.renderQuadColor( renderer, bakedquad, color );
 		}
 	}
@@ -202,23 +201,23 @@ public class RenderHelper
 		final Tessellator tess = Tessellator.getInstance();
 		final BufferBuilder buffer = tess.getBuffer();
 		buffer.begin( GL11.GL_LINE_STRIP, DefaultVertexFormats.POSITION_COLOR );
-		buffer.pos( a.xCoord, a.yCoord, a.zCoord ).color( red, green, blue, alpha ).endVertex();
-		buffer.pos( b.xCoord, b.yCoord, b.zCoord ).color( red, green, blue, alpha ).endVertex();
+		buffer.pos( a.x, a.y, a.z ).color( red, green, blue, alpha ).endVertex();
+		buffer.pos( b.x, b.y, b.z ).color( red, green, blue, alpha ).endVertex();
 		tess.draw();
 	}
 
 	public static int getTint(
 			final int alpha,
 			final int tintIndex,
-			final World worldObj,
+			final World world,
 			final BlockPos blockPos )
 	{
-		return alpha | Minecraft.getMinecraft().getBlockColors().colorMultiplier( ChiselsAndBits.getBlocks().getChiseledDefaultState(), worldObj, blockPos, tintIndex );
+		return alpha | Minecraft.getMinecraft().getBlockColors().colorMultiplier( ChiselsAndBits.getBlocks().getChiseledDefaultState(), world, blockPos, tintIndex );
 	}
 
 	public static void renderModel(
 			final IBakedModel model,
-			final World worldObj,
+			final World world,
 			final BlockPos blockPos,
 			final int alpha )
 	{
@@ -228,16 +227,16 @@ public class RenderHelper
 
 		for ( final EnumFacing enumfacing : EnumFacing.values() )
 		{
-			renderQuads( alpha, buffer, model.getQuads( null, enumfacing, 0 ), worldObj, blockPos );
+			renderQuads( alpha, buffer, model.getQuads( null, enumfacing, 0 ), world, blockPos );
 		}
 
-		renderQuads( alpha, buffer, model.getQuads( null, null, 0 ), worldObj, blockPos );
+		renderQuads( alpha, buffer, model.getQuads( null, null, 0 ), world, blockPos );
 		tessellator.draw();
 	}
 
 	public static void renderGhostModel(
 			final IBakedModel baked,
-			final World worldObj,
+			final World world,
 			final BlockPos blockPos,
 			final boolean isUnplaceable )
 	{
@@ -250,10 +249,10 @@ public class RenderHelper
 		GlStateManager.blendFunc( GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA );
 		GlStateManager.colorMask( false, false, false, false );
 
-		RenderHelper.renderModel( baked, worldObj, blockPos, alpha );
+		RenderHelper.renderModel( baked, world, blockPos, alpha );
 		GlStateManager.colorMask( true, true, true, true );
 		GlStateManager.depthFunc( GL11.GL_LEQUAL );
-		RenderHelper.renderModel( baked, worldObj, blockPos, alpha );
+		RenderHelper.renderModel( baked, world, blockPos, alpha );
 
 		GlStateManager.disableBlend();
 	}

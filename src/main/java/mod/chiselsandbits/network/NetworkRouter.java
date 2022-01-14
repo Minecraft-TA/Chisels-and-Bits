@@ -109,7 +109,7 @@ public class NetworkRouter
 		{
 			if ( serverPacketHandler != null )
 			{
-				serverPacketHandler.onPacketData( ev.getPacket(), ev.getHandler(), srv.playerEntity );
+				serverPacketHandler.onPacketData( ev.getPacket(), ev.getHandler(), srv.player );
 			}
 		}
 		catch ( final ThreadQuickExitException ext )

@@ -560,7 +560,7 @@ public class ClientSide {
             final Minecraft mc = Minecraft.getMinecraft();
             if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
                 try {
-                    final IBitAccess access = ChiselsAndBits.getApi().getBitAccess(mc.theWorld, mc.objectMouseOver.getBlockPos());
+                    final IBitAccess access = ChiselsAndBits.getApi().getBitAccess(mc.world, mc.objectMouseOver.getBlockPos());
                     final ItemStack is = access.getBitsAsItem(null, ItemType.CHISLED_BLOCK, false);
 
                     CreativeClipboardTab.addItem(is);
@@ -575,7 +575,7 @@ public class ClientSide {
             if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
                 try {
                     final BitLocation bl = new BitLocation(mc.objectMouseOver, true, BitOperation.CHISEL);
-                    final IBitAccess access = ChiselsAndBits.getApi().getBitAccess(mc.theWorld, bl.getBlockPos());
+                    final IBitAccess access = ChiselsAndBits.getApi().getBitAccess(mc.world, bl.getBlockPos());
                     final IBitBrush brush = access.getBitAt(bl.getBitX(), bl.getBitY(), bl.getBitZ());
                     if (brush != null) {
                         final ItemStack is = brush.getItemStack(1);
@@ -593,17 +593,17 @@ public class ClientSide {
             final Minecraft mc = Minecraft.getMinecraft();
             final ScaledResolution res = event.getResolution();
 
-            if (!mc.thePlayer.isSpectator()) {
+            if (!mc.player.isSpectator()) {
                 final GuiIngame sc = mc.ingameGUI;
 
                 for (int slot = 0; slot < 9; ++slot) {
-                    final ItemStack stack = mc.thePlayer.inventory.mainInventory.get(slot);
+                    final ItemStack stack = mc.player.inventory.mainInventory.get(slot);
                     if (stack != null && stack.getItem() instanceof ItemChisel) {
                         final ChiselToolType toolType = getToolTypeForItem(stack);
                         IToolMode mode = toolType.getMode(stack);
 
                         if (!ChiselsAndBits.getConfig().perChiselMode && tool == ChiselToolType.CHISEL) {
-                            mode = ChiselModeManager.getChiselMode(mc.thePlayer, ChiselToolType.CHISEL, lastHand);
+                            mode = ChiselModeManager.getChiselMode(mc.player, ChiselToolType.CHISEL, lastHand);
                         }
 
                         final int x = res.getScaledWidth() / 2 - 90 + slot * 20 + 2;
@@ -817,7 +817,7 @@ public class ClientSide {
         if (tool != null && tool == ChiselToolType.TAPEMEASURE) {
             final EntityPlayer player = getPlayer();
             final RayTraceResult mop = Minecraft.getMinecraft().objectMouseOver;
-            final World theWorld = player.worldObj;
+            final World theWorld = player.world;
 
             if (mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK) {
                 final BitLocation location = new BitLocation(mop, true, BitOperation.CHISEL);
@@ -861,7 +861,7 @@ public class ClientSide {
             final EntityPlayer player = event.getPlayer();
             final float partialTicks = event.getPartialTicks();
             final RayTraceResult mop = Minecraft.getMinecraft().objectMouseOver;
-            final World theWorld = player.worldObj;
+            final World theWorld = player.world;
 
             if (mop == null || mop.typeOfHit != RayTraceResult.Type.BLOCK) {
                 return;
@@ -998,10 +998,10 @@ public class ClientSide {
         }
 
         // now render the ghosts...
-        final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+        final EntityPlayer player = Minecraft.getMinecraft().player;
         final float partialTicks = event.getPartialTicks();
         final RayTraceResult mop = Minecraft.getMinecraft().objectMouseOver;
-        final World theWorld = player.worldObj;
+        final World theWorld = player.world;
         final ItemStack currentItem = player.getHeldItemMainhand();
 
         final double x = player.lastTickPosX + (player.posX - player.lastTickPosX) * partialTicks;
@@ -1218,7 +1218,7 @@ public class ClientSide {
         if (displayStatus == 0) {
             displayStatus = GLAllocation.generateDisplayLists(1);
             GlStateManager.glNewList(displayStatus, GL11.GL_COMPILE_AND_EXECUTE);
-            RenderHelper.renderGhostModel(baked, player.worldObj, blockPos, isUnplaceable);
+            RenderHelper.renderGhostModel(baked, player.world, blockPos, isUnplaceable);
             GlStateManager.glEndList();
         } else {
             GlStateManager.callList(displayStatus);
@@ -1242,7 +1242,7 @@ public class ClientSide {
     }
 
     public EntityPlayer getPlayer() {
-        return Minecraft.getMinecraft().thePlayer;
+        return Minecraft.getMinecraft().player;
     }
 
     public boolean addHitEffects(

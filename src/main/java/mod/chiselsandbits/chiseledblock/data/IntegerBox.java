@@ -33,12 +33,12 @@ public final class IntegerBox
 			final EnumFacing side,
 			final int scale )
 	{
-		minX += side.getFrontOffsetX() * scale;
-		maxX += side.getFrontOffsetX() * scale;
-		minY += side.getFrontOffsetY() * scale;
-		maxY += side.getFrontOffsetY() * scale;
-		minZ += side.getFrontOffsetZ() * scale;
-		maxZ += side.getFrontOffsetZ() * scale;
+		minX += side.getXOffset() * scale;
+		maxX += side.getXOffset() * scale;
+		minY += side.getYOffset() * scale;
+		maxY += side.getYOffset() * scale;
+		minZ += side.getZOffset() * scale;
+		maxZ += side.getZOffset() * scale;
 	}
 
 	public boolean isBadBitPositions()

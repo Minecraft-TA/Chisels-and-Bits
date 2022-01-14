@@ -150,7 +150,7 @@ public class BagDyeing extends CustomRecipe
 	}
 
 	@Override
-	public boolean func_194133_a(
+	public boolean canFit(
 			int p_194133_1_,
 			int p_194133_2_ )
 	{

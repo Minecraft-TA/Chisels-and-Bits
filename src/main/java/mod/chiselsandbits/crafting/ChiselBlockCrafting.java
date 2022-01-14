@@ -1,13 +1,7 @@
 package mod.chiselsandbits.crafting;
 
-import java.util.Random;
-
 import mod.chiselsandbits.api.APIExceptions.InvalidBitItem;
-import mod.chiselsandbits.api.IBitAccess;
-import mod.chiselsandbits.api.IBitBag;
-import mod.chiselsandbits.api.IBitBrush;
-import mod.chiselsandbits.api.IBitVisitor;
-import mod.chiselsandbits.api.ItemType;
+import mod.chiselsandbits.api.*;
 import mod.chiselsandbits.chiseledblock.ItemBlockChiseled;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.helpers.ModUtil;
@@ -22,6 +16,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+
+import java.util.Random;
 
 public class ChiselBlockCrafting extends CustomRecipe
 {
@@ -77,16 +73,16 @@ public class ChiselBlockCrafting extends CustomRecipe
 				{
 					return currentValue;
 				}
-				
+
 				boolean damageTools = ChiselsAndBits.getConfig().damageTools;
-				
+
 				if ( chisel.getItemDamage() < chisel.getMaxDamage() || ! damageTools )
 				{
 					if ( damageTools )
 					{
 						ModUtil.damageItem( chisel, r );
 					}
-					
+
 					final ItemStack is = currentValue.getItemStack( 1 );
 					if ( is != null )
 					{
@@ -270,7 +266,7 @@ public class ChiselBlockCrafting extends CustomRecipe
 	}
 
 	@Override
-	public boolean func_194133_a(
+	public boolean canFit(
 			final int width,
 			final int height )
 	{
@@ -287,7 +283,7 @@ public class ChiselBlockCrafting extends CustomRecipe
 	public NonNullList<ItemStack> getRemainingItems(
 			final InventoryCrafting inv )
 	{
-		final NonNullList<ItemStack> list = NonNullList.func_191196_a();
+		final NonNullList<ItemStack> list = NonNullList.create();
 
 		final ChiselBlockInfo cbc = getInfo( inv );
 		cbc.doLogic();

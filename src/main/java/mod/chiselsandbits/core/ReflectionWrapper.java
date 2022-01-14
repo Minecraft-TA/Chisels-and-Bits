@@ -1,8 +1,5 @@
 package mod.chiselsandbits.core;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-
 import mod.chiselsandbits.helpers.ModUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -11,6 +8,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.lang.reflect.Field;
+import java.util.Map;
 
 public class ReflectionWrapper
 {
@@ -93,7 +93,7 @@ public class ReflectionWrapper
 	@SideOnly( Side.CLIENT )
 	public void endHighlightedStack()
 	{
-		setHighlightStack( Minecraft.getMinecraft().thePlayer.getHeldItemMainhand() );
+		setHighlightStack( Minecraft.getMinecraft().player.getHeldItemMainhand() );
 	}
 
 	/**

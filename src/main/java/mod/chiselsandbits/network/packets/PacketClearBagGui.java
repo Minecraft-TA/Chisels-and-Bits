@@ -1,12 +1,12 @@
 package mod.chiselsandbits.network.packets;
 
-import java.io.IOException;
-
 import mod.chiselsandbits.bitbag.BagContainer;
 import mod.chiselsandbits.network.ModPacket;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
+
+import java.io.IOException;
 
 public class PacketClearBagGui extends ModPacket
 {
@@ -36,7 +36,7 @@ public class PacketClearBagGui extends ModPacket
 	public void getPayload(
 			final PacketBuffer buffer )
 	{
-		buffer.writeItemStackToBuffer( stack );
+		buffer.writeItemStack( stack );
 		// no data...
 	}
 
@@ -46,7 +46,7 @@ public class PacketClearBagGui extends ModPacket
 	{
 		try
 		{
-			stack = buffer.readItemStackFromBuffer();
+			stack = buffer.readItemStack();
 		}
 		catch ( final IOException e )
 		{

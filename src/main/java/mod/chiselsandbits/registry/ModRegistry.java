@@ -1,8 +1,5 @@
 package mod.chiselsandbits.registry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mod.chiselsandbits.client.CreativeClipboardTab;
 import mod.chiselsandbits.client.ModCreativeTab;
 import mod.chiselsandbits.core.ChiselsAndBits;
@@ -13,6 +10,9 @@ import net.minecraft.item.ItemBlock;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModRegistry
 {
@@ -79,7 +79,7 @@ public class ModRegistry
 		{
 			item.setCreativeTab( creativeTab );
 
-			item.setUnlocalizedName( unlocalizedPrefix + name );
+			item.setTranslationKey( unlocalizedPrefix + name );
 			item.setRegistryName( ChiselsAndBits.MODID, name );
 
 			registeredItems.add( item );
@@ -99,8 +99,8 @@ public class ModRegistry
 		item.setRegistryName( ChiselsAndBits.MODID, name );
 		block.setRegistryName( ChiselsAndBits.MODID, name );
 
-		block.setUnlocalizedName( unlocalizedPrefix + name );
-		item.setUnlocalizedName( unlocalizedPrefix + name );
+		block.setTranslationKey( unlocalizedPrefix + name );
+		item.setTranslationKey( unlocalizedPrefix + name );
 
 		registeredBlocks.add( block );
 		registeredItems.add( item );

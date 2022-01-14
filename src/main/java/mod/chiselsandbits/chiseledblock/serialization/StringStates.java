@@ -1,11 +1,6 @@
 package mod.chiselsandbits.chiseledblock.serialization;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-
 import com.google.common.base.Optional;
-
 import mod.chiselsandbits.core.Log;
 import mod.chiselsandbits.helpers.ModUtil;
 import net.minecraft.block.Block;
@@ -14,6 +9,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 public class StringStates
 {
@@ -111,7 +110,7 @@ public class StringStates
 			stateName.append( '?' );
 
 			boolean first = true;
-			for ( final IProperty<?> P : state.getPropertyNames() )
+			for ( final IProperty<?> P : state.getPropertyKeys() )
 			{
 				if ( !first )
 				{

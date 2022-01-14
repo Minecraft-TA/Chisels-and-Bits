@@ -28,8 +28,8 @@ public class CrossWorldBlobSerializerLegacy extends BlobSerializer
 	protected int readStateID(
 			final PacketBuffer buffer )
 	{
-		final String name = buffer.readStringFromBuffer( 512 );
-		final int meta = buffer.readVarIntFromBuffer();
+		final String name = buffer.readString( 512 );
+		final int meta = buffer.readVarInt();
 
 		final Block blk = Block.REGISTRY.getObject( new ResourceLocation( name ) );
 
@@ -59,7 +59,7 @@ public class CrossWorldBlobSerializerLegacy extends BlobSerializer
 		final int meta = blk.getMetaFromState( state );
 
 		buffer.writeString( name );
-		buffer.writeVarIntToBuffer( meta );
+		buffer.writeVarInt( meta );
 	}
 
 	@Override

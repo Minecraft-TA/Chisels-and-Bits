@@ -289,7 +289,7 @@ public class ChiselAndBitsAPI implements IChiselAndBitsAPI
 			spawnPos = new Vec3d( player.posX, player.posY, player.posZ );
 		}
 
-		final EntityItem ei = new EntityItem( player.getEntityWorld(), spawnPos.xCoord, spawnPos.yCoord, spawnPos.zCoord, stack );
+		final EntityItem ei = new EntityItem( player.getEntityWorld(), spawnPos.x, spawnPos.y, spawnPos.z, stack );
 
 		if ( stack.getItem() == ChiselsAndBits.getItems().itemBlockBit )
 		{
@@ -304,8 +304,8 @@ public class ChiselAndBitsAPI implements IChiselAndBitsAPI
 		}
 		else if ( !player.inventory.addItemStackToInventory( stack ) )
 		{
-			ei.setEntityItemStack( stack );
-			player.getEntityWorld().spawnEntityInWorld( ei );
+			ei.setItem( stack );
+			player.getEntityWorld().spawnEntity( ei );
 		}
 	}
 

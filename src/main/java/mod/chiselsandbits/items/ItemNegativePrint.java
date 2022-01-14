@@ -1,10 +1,5 @@
 package mod.chiselsandbits.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import mod.chiselsandbits.api.IBitAccess;
 import mod.chiselsandbits.api.VoxelStats;
 import mod.chiselsandbits.chiseledblock.BlockChiseled;
@@ -13,12 +8,7 @@ import mod.chiselsandbits.chiseledblock.TileEntityBlockChiseled;
 import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.ClientSide;
-import mod.chiselsandbits.helpers.ActingPlayer;
-import mod.chiselsandbits.helpers.BitInventoryFeeder;
-import mod.chiselsandbits.helpers.ContinousChisels;
-import mod.chiselsandbits.helpers.IContinuousInventory;
-import mod.chiselsandbits.helpers.LocalStrings;
-import mod.chiselsandbits.helpers.ModUtil;
+import mod.chiselsandbits.helpers.*;
 import mod.chiselsandbits.integration.mcmultipart.MCMultipartProxy;
 import mod.chiselsandbits.interfaces.IItemScrollWheel;
 import mod.chiselsandbits.interfaces.IPatternItem;
@@ -44,6 +34,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemNegativePrint extends Item implements IVoxelBlobItem, IItemScrollWheel, IPatternItem
 {
@@ -115,14 +109,14 @@ public class ItemNegativePrint extends Item implements IVoxelBlobItem, IItemScro
 	}
 
 	@Override
-	public String getUnlocalizedName(
+	public String getTranslationKey(
 			final ItemStack stack )
 	{
 		if ( isWritten( stack ) )
 		{
-			return super.getUnlocalizedName( stack ) + "_written";
+			return super.getTranslationKey( stack ) + "_written";
 		}
-		return super.getUnlocalizedName( stack );
+		return super.getTranslationKey( stack );
 	}
 
 	@Override

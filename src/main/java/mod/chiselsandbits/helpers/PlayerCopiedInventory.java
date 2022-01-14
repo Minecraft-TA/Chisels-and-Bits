@@ -111,7 +111,7 @@ public class PlayerCopiedInventory implements IInventory
 	}
 
 	@Override
-	public boolean isUseableByPlayer(
+	public boolean isUsableByPlayer(
 			final EntityPlayer player )
 	{
 		return true;
@@ -167,11 +167,11 @@ public class PlayerCopiedInventory implements IInventory
 	}
 
 	@Override
-	public boolean func_191420_l()
+	public boolean isEmpty()
 	{
 		for ( final ItemStack itemstack : slots )
 		{
-			if ( !itemstack.func_190926_b() )
+			if ( !itemstack.isEmpty() )
 			{
 				return false;
 			}

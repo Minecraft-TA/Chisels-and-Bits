@@ -1,7 +1,5 @@
 package mod.chiselsandbits.render.chiseledblock;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import mod.chiselsandbits.render.cache.FormatInfo;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -11,6 +9,8 @@ import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 import net.minecraftforge.client.model.pipeline.LightUtil;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ChiselsAndBitsBakedQuad extends BakedQuad
 {
@@ -81,7 +81,7 @@ public class ChiselsAndBitsBakedQuad extends BakedQuad
 	@Override
 	public int[] getVertexData()
 	{
-		final int[] tmpData = new int[format.getNextOffset() /* / 4 * 4 */];
+		final int[] tmpData = new int[format.getSize() /* / 4 * 4 */];
 
 		for ( int v = 0; v < 4; v++ )
 		{

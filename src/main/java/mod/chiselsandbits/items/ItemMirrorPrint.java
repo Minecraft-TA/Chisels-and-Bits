@@ -1,8 +1,5 @@
 package mod.chiselsandbits.items;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import mod.chiselsandbits.chiseledblock.NBTBlobConverter;
 import mod.chiselsandbits.chiseledblock.TileEntityBlockChiseled;
 import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
@@ -26,6 +23,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemMirrorPrint extends Item implements IPatternItem
 {
@@ -69,15 +69,15 @@ public class ItemMirrorPrint extends Item implements IPatternItem
 	}
 
 	@Override
-	public String getUnlocalizedName(
+	public String getTranslationKey(
 			final ItemStack stack )
 	{
 		if ( isWritten( stack ) )
 		{
-			return super.getUnlocalizedName( stack ) + "_written";
+			return super.getTranslationKey( stack ) + "_written";
 		}
 
-		return super.getUnlocalizedName( stack );
+		return super.getTranslationKey( stack );
 	}
 
 	@Override

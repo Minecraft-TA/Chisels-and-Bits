@@ -1,14 +1,5 @@
 package mod.chiselsandbits.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import org.apache.commons.lang3.tuple.Pair;
-
 import mod.chiselsandbits.bitbag.BagInventory;
 import mod.chiselsandbits.chiseledblock.ItemBlockChiseled;
 import mod.chiselsandbits.chiseledblock.NBTBlobConverter;
@@ -45,6 +36,13 @@ import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import org.apache.commons.lang3.tuple.Pair;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class ModUtil
 {
@@ -61,7 +59,7 @@ public class ModUtil
 	static public EnumFacing getPlaceFace(
 			final EntityLivingBase placer )
 	{
-		return EnumFacing.getHorizontal( MathHelper.floor_double( placer.rotationYaw * 4.0F / 360.0F + 0.5D ) & 3 ).getOpposite();
+		return EnumFacing.byHorizontalIndex( MathHelper.floor( placer.rotationYaw * 4.0F / 360.0F + 0.5D ) & 3 ).getOpposite();
 	}
 
 	static public Pair<Vec3d, Vec3d> getPlayerRay(
@@ -90,7 +88,7 @@ public class ModUtil
 		}
 
 		final Vec3d from = new Vec3d( x, y, z );
-		final Vec3d to = from.addVector( eyeRayX * reachDistance, eyeRayY * reachDistance, eyeRayZ * reachDistance );
+		final Vec3d to = from.add( eyeRayX * reachDistance, eyeRayY * reachDistance, eyeRayZ * reachDistance );
 
 		return Pair.of( from, to );
 	}
@@ -283,7 +281,7 @@ public class ModUtil
 		// also stupid...
 		else if ( world instanceof World )
 		{
-			return ( (World) world ).getChunkFromBlockCoords( pos ).getTileEntity( pos, Chunk.EnumCreateEntityType.CHECK );
+			return ( (World) world ).getChunk( pos ).getTileEntity( pos, Chunk.EnumCreateEntityType.CHECK );
 		}
 
 		// yep... stupid.
@@ -451,11 +449,11 @@ public class ModUtil
 	}
 
 	public static void sendUpdate(
-			@Nonnull final World worldObj,
+			@Nonnull final World world,
 			@Nonnull final BlockPos pos )
 	{
-		final IBlockState state = worldObj.getBlockState( pos );
-		worldObj.notifyBlockUpdate( pos, state, state, 0 );
+		final IBlockState state = world.getBlockState( pos );
+		world.notifyBlockUpdate( pos, state, state, 0 );
 	}
 
 	public static ItemStack getItemFromBlock(
@@ -615,14 +613,14 @@ public class ModUtil
 	public static int getStackSize(
 			final ItemStack stack )
 	{
-		return stack == null ? 0 : stack.func_190916_E();
+		return stack == null ? 0 : stack.getCount();
 	}
 
 	public static void setStackSize(
 			final @Nonnull ItemStack stack,
 			final int stackSize )
 	{
-		stack.func_190920_e( stackSize );
+		stack.setCount( stackSize );
 	}
 
 	public static void adjustStackSize(
@@ -639,7 +637,7 @@ public class ModUtil
 	{
 		if ( create )
 		{
-			return stack.func_190925_c( tag );
+			return stack.getOrCreateSubCompound( tag );
 		}
 		else
 		{
@@ -649,19 +647,19 @@ public class ModUtil
 
 	public static @Nonnull ItemStack getEmptyStack()
 	{
-		return ItemStack.field_190927_a;
+		return ItemStack.EMPTY;
 	}
 
 	public static boolean notEmpty(
 			final ItemStack itemStack )
 	{
-		return itemStack != null && !itemStack.func_190926_b();
+		return itemStack != null && !itemStack.isEmpty();
 	}
 
 	public static boolean isEmpty(
 			final ItemStack itemStack )
 	{
-		return itemStack == null || itemStack.func_190926_b();
+		return itemStack == null || itemStack.isEmpty();
 	}
 
 	public static @Nonnull NBTTagCompound getTagCompound(
@@ -711,7 +709,7 @@ public class ModUtil
 		{
 			if ( is.attemptDamageItem( 1, r, null ) )
 			{
-				is.func_190918_g( 1 );
+				is.shrink( 1 );
 			}
 		}
 	}

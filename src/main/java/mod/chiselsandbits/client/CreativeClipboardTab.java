@@ -1,9 +1,5 @@
 package mod.chiselsandbits.client;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
 import mod.chiselsandbits.api.IBitAccess;
 import mod.chiselsandbits.api.ItemType;
 import mod.chiselsandbits.chiseledblock.NBTBlobConverter;
@@ -17,6 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CreativeClipboardTab extends CreativeTabs implements ICacheClearable
 {
@@ -84,7 +84,7 @@ public class CreativeClipboardTab extends CreativeTabs implements ICacheClearabl
 	}
 
 	@Override
-	public ItemStack getTabIconItem()
+	public ItemStack createIcon()
 	{
 		final ModItems cbitems = ChiselsAndBits.getItems();
 		return new ItemStack( ModUtil.firstNonNull(

@@ -1,11 +1,11 @@
 package mod.chiselsandbits.chiseledblock.serialization;
 
+import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
+import net.minecraft.network.PacketBuffer;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
-import net.minecraft.network.PacketBuffer;
 
 public class BlobSerializer
 {
@@ -39,7 +39,7 @@ public class BlobSerializer
 	public BlobSerializer(
 			final PacketBuffer toInflate )
 	{
-		types = toInflate.readVarIntFromBuffer();
+		types = toInflate.readVarInt();
 		palette = new int[types];
 		index = null;
 
@@ -56,7 +56,7 @@ public class BlobSerializer
 			final PacketBuffer to )
 	{
 		// palette size...
-		to.writeVarIntToBuffer( palette.length );
+		to.writeVarInt( palette.length );
 
 		// write palette
 		for ( int x = 0; x < palette.length; x++ )
@@ -68,14 +68,14 @@ public class BlobSerializer
 	protected int readStateID(
 			final PacketBuffer buffer )
 	{
-		return buffer.readVarIntFromBuffer();
+		return buffer.readVarInt();
 	}
 
 	protected void writeStateID(
 			final PacketBuffer buffer,
 			final int key )
 	{
-		buffer.writeVarIntToBuffer( key );
+		buffer.writeVarInt( key );
 	}
 
 	private int bitsPerBit()

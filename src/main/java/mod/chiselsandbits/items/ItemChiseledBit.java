@@ -140,7 +140,7 @@ public class ItemChiseledBit extends Item implements IItemScrollWheel, IChiselMo
 
             final Set<String> extra = new HashSet<String>();
             if (blk != null && state != null) {
-                for (final IProperty<?> p : state.getPropertyNames()) {
+                for (final IProperty<?> p : state.getPropertyKeys()) {
                     if (p.getName().equals("axis") || p.getName().equals("facing")) {
                         extra.add(DeprecationHelper.translateToLocal("mod.chiselsandbits.pretty." + p.getName() + "-" + state.getProperties().get(p).toString()));
                     }
@@ -277,7 +277,7 @@ public class ItemChiseledBit extends Item implements IItemScrollWheel, IChiselMo
     public void getSubItems(
             final CreativeTabs tab,
             final NonNullList subItems) {
-        if (!this.func_194125_a(tab)) // is this my creative tab?
+        if (!this.isInCreativeTab(tab)) // is this my creative tab?
         {
             return;
         }
@@ -285,7 +285,7 @@ public class ItemChiseledBit extends Item implements IItemScrollWheel, IChiselMo
         if (bits == null) {
             bits = new ArrayList<ItemStack>();
 
-            final NonNullList<ItemStack> List = NonNullList.func_191196_a();
+            final NonNullList<ItemStack> List = NonNullList.create();
             final BitSet used = new BitSet(4096);
 
             for (final Object obj : Item.REGISTRY) {
@@ -439,11 +439,11 @@ public class ItemChiseledBit extends Item implements IItemScrollWheel, IChiselMo
             //send them a message.
             final int stateId = ModUtil.getStateId(blkstate);
             if (!ItemChiseledBit.hasBitSpace(player, stateId)) {
-                if (player.worldObj.isRemote && (timer == null || timer.elapsed(TimeUnit.MILLISECONDS) > 1000)) {
+                if (player.world.isRemote && (timer == null || timer.elapsed(TimeUnit.MILLISECONDS) > 1000)) {
                     //Timer is client-sided so it doesn't have to be made player-specific
                     timer = Stopwatch.createStarted();
                     //Only client should handle messaging.
-                    player.addChatMessage(new TextComponentTranslation("mod.chiselsandbits.result.require_bag"));
+                    player.sendMessage(new TextComponentTranslation("mod.chiselsandbits.result.require_bag"));
                 }
                 return true;
             }

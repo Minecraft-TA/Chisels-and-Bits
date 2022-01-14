@@ -1,9 +1,5 @@
 package mod.chiselsandbits.render;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
 import mod.chiselsandbits.chiseledblock.BlockChiseled;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.interfaces.ICacheClearable;
@@ -17,6 +13,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class SmartModelManager
 {
@@ -47,7 +47,7 @@ public class SmartModelManager
 			final ResourceLocation modelLocation,
 			final IBakedModel modelGen )
 	{
-		final ResourceLocation second = new ResourceLocation( modelLocation.getResourceDomain(), modelLocation.getResourcePath().substring( 1 + modelLocation.getResourcePath().lastIndexOf( '/' ) ) );
+		final ResourceLocation second = new ResourceLocation( modelLocation.getNamespace(), modelLocation.getPath().substring( 1 + modelLocation.getPath().lastIndexOf( '/' ) ) );
 
 		if ( modelGen instanceof ICacheClearable )
 		{

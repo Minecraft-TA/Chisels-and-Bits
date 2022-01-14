@@ -9,7 +9,7 @@ public class ItemColorBitBag implements IItemColor
 {
 
 	@Override
-	public int getColorFromItemstack(
+	public int colorMultiplier(
 			ItemStack stack,
 			int tintIndex )
 	{
@@ -17,7 +17,7 @@ public class ItemColorBitBag implements IItemColor
 		{
 			EnumDyeColor color = ChiselsAndBits.getItems().itemBitBag.getDyedColor( stack );
 			if ( color != null )
-				return color.func_193350_e();
+				return color.getColorValue();
 		}
 
 		return -1;

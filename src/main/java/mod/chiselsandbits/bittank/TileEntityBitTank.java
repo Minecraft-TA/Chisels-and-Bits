@@ -203,11 +203,11 @@ public class TileEntityBitTank extends TileEntity implements IItemHandler, IFlui
     private void saveAndUpdate() {
         markDirty();
 
-        long currentTick = this.worldObj.getTotalWorldTime();
+        long currentTick = this.world.getTotalWorldTime();
         if (lastKnownTick != currentTick) {
             this.lastKnownTick = currentTick;
 
-            ModUtil.sendUpdate(worldObj, getPos());
+            ModUtil.sendUpdate(world, getPos());
 
             final int lv = getLightValue();
             if (oldLV != lv) {
@@ -467,6 +467,6 @@ public class TileEntityBitTank extends TileEntity implements IItemHandler, IFlui
 
     @Override
     public void markDirty() {
-        this.worldObj.markChunkDirty(this.pos, this);
+        this.world.markChunkDirty(this.pos, this);
     }
 }

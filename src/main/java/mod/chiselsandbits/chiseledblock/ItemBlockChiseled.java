@@ -1,10 +1,5 @@
 package mod.chiselsandbits.chiseledblock;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import mod.chiselsandbits.api.EventBlockBitModification;
 import mod.chiselsandbits.api.IBitAccess;
 import mod.chiselsandbits.chiseledblock.BlockChiseled.ReplaceWithChisledValue;
@@ -14,10 +9,8 @@ import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
 import mod.chiselsandbits.client.UndoTracker;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.ClientSide;
-import mod.chiselsandbits.core.Log;
 import mod.chiselsandbits.helpers.BitOperation;
 import mod.chiselsandbits.helpers.DeprecationHelper;
-import mod.chiselsandbits.helpers.ExceptionNoTileEntity;
 import mod.chiselsandbits.helpers.LocalStrings;
 import mod.chiselsandbits.helpers.ModUtil;
 import mod.chiselsandbits.interfaces.IItemScrollWheel;
@@ -38,12 +31,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.util.*;
 import net.minecraft.util.EnumFacing.Axis;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.Rotation;
-import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -52,6 +41,10 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemBlockChiseled extends ItemBlock implements IVoxelBlobItem, IItemScrollWheel, IItemBlockAccurate
 {
@@ -126,7 +119,7 @@ public class ItemBlockChiseled extends ItemBlock implements IVoxelBlobItem, IIte
 			pos = pos.offset( side );
 		}
 
-		return worldIn.func_190527_a( this.block, pos, false, side, null );
+		return worldIn.mayPlace( this.block, pos, false, side, null );
 	}
 
 	public boolean canPlaceBlockHere(
@@ -256,7 +249,7 @@ public class ItemBlockChiseled extends ItemBlock implements IVoxelBlobItem, IIte
 
 				return EnumActionResult.SUCCESS;
 			}
-			
+
 			return EnumActionResult.FAIL;
 		}
 		else

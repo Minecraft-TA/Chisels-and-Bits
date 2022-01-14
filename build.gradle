@@ -1,120 +1,100 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven/' }
+        maven { url = 'https://plugins.gradle.org/m2/' }
         mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3+'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
 
 apply plugin: 'idea'
-apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: 'net.minecraftforge.gradle'
 
 sourceCompatibility = targetCompatibility = "1.8" // Need this here so eclipse task generates correctly.
 compileJava {
     sourceCompatibility = targetCompatibility = "1.8"
 }
 
-group= "mod.chiselsandbits"
+group = "mod.chiselsandbits"
 archivesBaseName = "chiselsandbits"
 if (System.getenv().BUILD_NUMBER != null) {//adds the build number to the end of the version string if on a build server
     project.version += ".${System.getenv().BUILD_NUMBER}"
 }
 
 repositories {
-	maven { url "http://dvs1.progwml6.com/files/maven" }
-	maven { url "http://maven.amadornes.com/" }
-	flatDir { dirs 'libs' }
+    maven { url "https://dvs1.progwml6.com/files/maven" }
+    maven { url "https://maven.amadornes.com/" }
+    flatDir { dirs 'libs' }
 }
 
 dependencies {
-	deobfCompile "mezz.jei:${jei_version}"
-	deobfCompile "${mcmp2_version}"
+    minecraft 'net.minecraftforge:forge:1.12.2-14.23.5.2854'
+
+    compileOnly "${mcmp2_version}"
+    compileOnly fg.deobf("mezz.jei:jei_1.12.2:4.16.1.302:api")
+    runtimeOnly fg.deobf("mezz.jei:jei_1.12.2:4.16.1.302")
 }
+
 
 minecraft {
-    version = "${mc_version}-${forge_version}"
-    runDir = "eclipse"
-    mappings = "snapshot_20161111"
-    replaceIn "ChiselsAndBits.java"
-    replace "@VERSION@", project.version
-}
+    mappings channel: 'stable', version: '39-1.12'
+    accessTransformer = file('src/main/resources/META-INF/chiselsandbits_at.cfg')
+    runs {
+        client {
+            workingDirectory project.file('run')
 
-task apiJar(type: Jar) {
-    from sourceSets.main.java
-    include "mod/chiselsandbits/api/**"
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
-    from sourceSets.main.output
-    include "mod/chiselsandbits/api/**"
+            mods {
+                codedebug {
+                    source sourceSets.main
+                }
+            }
+        }
 
-    classifier = 'api'
-}
-// prevent java 8's strict doclint for javadocs from failing builds
-    allprojects {
-      tasks.withType(Javadoc) {
-        options.addStringOption('Xdoclint:none', '-quiet')
-      }
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                codedebug {
+                    source sourceSets.main
+                }
+            }
+        }
     }
+}
 
 jar {
-	manifest {
-		attributes 'FMLAT': 'chiselsandbits_at.cfg'
-	}
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    from javadoc.destinationDir
-    classifier = 'javadoc'
+    manifest {
+        attributes 'FMLAT': 'chiselsandbits_at.cfg'
+    }
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allJava
-    classifier = 'sources'
-}
-
-artifacts {
-   archives javadocJar
-   archives sourcesJar
-   archives apiJar
-}
-
-processResources
-{
+processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+    inputs.property "mcversion", project.mc_version
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include 'mcmod.info'
 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version': project.version, 'mcversion': project.mc_version
     }
 
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
-
-    // Move access transformers to META-INF
-    rename '(.+_at.cfg)', 'META-INF/$1'
 }
 
-task("uploadJars", dependsOn:"build") {
-    description = "uploads JARs"
-    if (project.hasProperty("local_maven")) {
-        apply plugin: 'maven'
-            uploadArchives {
-                repositories {
-                    mavenDeployer {
-                        repository(url: "file://${local_maven}")
-                }
-            }
-        }
-    }
-}
 idea { module { inheritOutputDirs = true } }

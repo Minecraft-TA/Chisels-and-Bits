@@ -1,17 +1,6 @@
 package mod.chiselsandbits.chiseledblock;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import javax.annotation.Nonnull;
-
-import mod.chiselsandbits.api.BoxType;
-import mod.chiselsandbits.api.EventBlockBitPostModification;
-import mod.chiselsandbits.api.EventFullBlockRestoration;
-import mod.chiselsandbits.api.IBitAccess;
-import mod.chiselsandbits.api.IChiseledBlockTileEntity;
-import mod.chiselsandbits.api.ItemType;
-import mod.chiselsandbits.api.VoxelStats;
+import mod.chiselsandbits.api.*;
 import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
 import mod.chiselsandbits.chiseledblock.data.VoxelBlobStateReference;
 import mod.chiselsandbits.chiseledblock.data.VoxelNeighborRenderTracker;
@@ -48,6 +37,10 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
+import java.util.Collection;
+import java.util.Collections;
 
 public class TileEntityBlockChiseled extends TileEntity implements IChiseledTileContainer, IChiseledBlockTileEntity
 {
@@ -99,7 +92,7 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 	@Override
 	public void sendUpdate()
 	{
-		ModUtil.sendUpdate( worldObj, pos );
+		ModUtil.sendUpdate( world, pos );
 	}
 
 	public void copyFrom(
@@ -113,7 +106,7 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 
 	public IExtendedBlockState getBasicState()
 	{
-		return getState( false, 0, worldObj );
+		return getState( false, 0, world );
 	}
 
 	public IExtendedBlockState getRenderState(
@@ -159,10 +152,10 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 					@Override
 					public void run()
 					{
-						if ( self.worldObj != null && self.pos != null )
+						if ( self.world != null && self.pos != null )
 						{
-							final TileEntity current = self.worldObj.getTileEntity( self.pos );
-							final TileEntityBlockChiseled dat = MCMultipartProxy.proxyMCMultiPart.getChiseledTileEntity( self.worldObj, self.pos, false );
+							final TileEntity current = self.world.getTileEntity( self.pos );
+							final TileEntityBlockChiseled dat = MCMultipartProxy.proxyMCMultiPart.getChiseledTileEntity( self.world, self.pos, false );
 
 							if ( current == null || self.isInvalid() )
 							{
@@ -174,9 +167,9 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 								current.invalidate();
 								final TileEntityBlockChiseledTESR TESR = new TileEntityBlockChiseledTESR();
 								TESR.copyFrom( self );
-								self.worldObj.removeTileEntity( self.pos );
-								self.worldObj.setTileEntity( self.pos, TESR );
-								self.worldObj.markBlockRangeForRenderUpdate( self.pos, self.pos );
+								self.world.removeTileEntity( self.pos );
+								self.world.setTileEntity( self.pos, TESR );
+								self.world.markBlockRangeForRenderUpdate( self.pos, self.pos );
 								vns.unlockDynamic();
 							}
 							else if ( dat == self )
@@ -196,10 +189,10 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 					@Override
 					public void run()
 					{
-						if ( self.worldObj != null && self.pos != null )
+						if ( self.world != null && self.pos != null )
 						{
-							final TileEntity current = self.worldObj.getTileEntity( self.pos );
-							final TileEntityBlockChiseled dat = MCMultipartProxy.proxyMCMultiPart.getChiseledTileEntity( self.worldObj, self.pos, false );
+							final TileEntity current = self.world.getTileEntity( self.pos );
+							final TileEntityBlockChiseled dat = MCMultipartProxy.proxyMCMultiPart.getChiseledTileEntity( self.world, self.pos, false );
 
 							if ( current == null || self.isInvalid() )
 							{
@@ -211,9 +204,9 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 								current.invalidate();
 								final TileEntityBlockChiseled nonTesr = new TileEntityBlockChiseled();
 								nonTesr.copyFrom( self );
-								self.worldObj.removeTileEntity( self.pos );
-								self.worldObj.setTileEntity( self.pos, nonTesr );
-								self.worldObj.markBlockRangeForRenderUpdate( self.pos, self.pos );
+								self.world.removeTileEntity( self.pos );
+								self.world.setTileEntity( self.pos, nonTesr );
+								self.world.markBlockRangeForRenderUpdate( self.pos, self.pos );
 								vns.unlockDynamic();
 							}
 							else if ( dat == self )
@@ -292,7 +285,7 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 		final NBTTagCompound nbttagcompound = new NBTTagCompound();
 		writeChisleData( nbttagcompound );
 
-		if ( nbttagcompound.hasNoTags() )
+		if ( nbttagcompound.isEmpty() )
 		{
 			return null;
 		}
@@ -329,15 +322,15 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 		final int oldLight = lightlevel;
 		final boolean changed = readChisleData( pkt.getNbtCompound() );
 
-		if ( worldObj != null && changed )
+		if ( world != null && changed )
 		{
-			worldObj.markBlockRangeForRenderUpdate( pos, pos );
+			world.markBlockRangeForRenderUpdate( pos, pos );
 			triggerDynamicUpdates();
 
 			// fixes lighting on placement when tile packet arrives.
 			if ( oldLight != lightlevel )
 			{
-				worldObj.checkLight( pos );
+				world.checkLight( pos );
 			}
 		}
 	}
@@ -347,7 +340,7 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 	 */
 	private void triggerDynamicUpdates()
 	{
-		if ( worldObj.isRemote && state != null )
+		if ( world.isRemote && state != null )
 		{
 			final VoxelNeighborRenderTracker vns = state.getValue( BlockChiseled.UProperty_VoxelNeighborState );
 
@@ -360,9 +353,9 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 			for ( final EnumFacing f : EnumFacing.VALUES )
 			{
 				final BlockPos p = getPos().offset( f );
-				if ( worldObj.isBlockLoaded( p ) )
+				if ( world.isBlockLoaded( p ) )
 				{
-					final TileEntity te = worldObj.getTileEntity( p );
+					final TileEntity te = world.getTileEntity( p );
 					if ( te instanceof TileEntityBlockChiseledTESR )
 					{
 						final TileEntityBlockChiseledTESR tesr = (TileEntityBlockChiseledTESR) te;
@@ -593,23 +586,23 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 
 		setState( newstate );
 
-		if ( hasWorldObj() && triggerUpdates )
+		if ( hasWorld() && triggerUpdates )
 		{
 			if ( oldLV != getLightValue() || oldNC != isNormalCube() )
 			{
-				worldObj.checkLight( pos );
+				world.checkLight( pos );
 
 				// update block state to reflect lighting characteristics
-				final IBlockState state = worldObj.getBlockState( pos );
+				final IBlockState state = world.getBlockState( pos );
 				if ( state.isFullCube() != isNormalCube && state.getBlock() instanceof BlockChiseled )
 				{
-					worldObj.setBlockState( pos, state.withProperty( BlockChiseled.LProperty_FullBlock, isNormalCube ) );
+					world.setBlockState( pos, state.withProperty( BlockChiseled.LProperty_FullBlock, isNormalCube ) );
 				}
 			}
 
 			if ( oldSides != sideState )
 			{
-				worldObj.notifyNeighborsOfStateChange( pos, worldObj.getBlockState( pos ).getBlock(), false );
+				world.notifyNeighborsOfStateChange( pos, world.getBlockState( pos ).getBlock(), false );
 			}
 		}
 
@@ -631,7 +624,7 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 		// are most of the bits in the center solid?
 		final int sideFlags = vb.getSideFlags( 5, 11, 4 * 4 );
 
-		if ( !hasWorldObj() )
+		if ( !hasWorld() )
 		{
 			if ( common.mostCommonState == 0 )
 			{
@@ -679,9 +672,9 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 			final IBlockState newState = ModUtil.getStateById( common.mostCommonState );
 			if ( ChiselsAndBits.getConfig().canRevertToBlock( newState ) )
 			{
-				if ( !MinecraftForge.EVENT_BUS.post( new EventFullBlockRestoration( worldObj, pos, newState ) ) )
+				if ( !MinecraftForge.EVENT_BUS.post( new EventFullBlockRestoration( world, pos, newState ) ) )
 				{
-					worldObj.setBlockState( pos, newState, triggerUpdates ? 3 : 0 );
+					world.setBlockState( pos, newState, triggerUpdates ? 3 : 0 );
 				}
 			}
 		}
@@ -699,13 +692,13 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 			getTileContainer().sendUpdate();
 
 			// since its possible for bits to occlude parts.. update every time.
-			final Block blk = worldObj.getBlockState( pos ).getBlock();
-			MCMultipartProxy.proxyMCMultiPart.triggerPartChange( worldObj.getTileEntity( pos ) );
-			// worldObj.notifyBlockOfStateChange( pos, blk, false );
+			final Block blk = world.getBlockState( pos ).getBlock();
+			MCMultipartProxy.proxyMCMultiPart.triggerPartChange( world.getTileEntity( pos ) );
+			// world.notifyBlockOfStateChange( pos, blk, false );
 
 			if ( triggerUpdates )
 			{
-				worldObj.notifyNeighborsOfStateChange( pos, blk, false );
+				world.notifyNeighborsOfStateChange( pos, blk, false );
 			}
 		}
 		else
@@ -713,18 +706,18 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 			setState( getBasicState()
 					.withProperty( BlockChiseled.UProperty_VoxelBlob, new VoxelBlobStateReference( 0, getPositionRandom( pos ) ) ) );
 
-			ModUtil.removeChisledBlock( worldObj, pos );
+			ModUtil.removeChisledBlock( world, pos );
 		}
 
 		if ( olv != lv || oldNC != nc )
 		{
-			worldObj.checkLight( pos );
+			world.checkLight( pos );
 
 			// update block state to reflect lighting characteristics
-			final IBlockState state = worldObj.getBlockState( pos );
+			final IBlockState state = world.getBlockState( pos );
 			if ( state.isFullCube() != isNormalCube && state.getBlock() instanceof BlockChiseled )
 			{
-				worldObj.setBlockState( pos, state.withProperty( BlockChiseled.LProperty_FullBlock, isNormalCube ) );
+				world.setBlockState( pos, state.withProperty( BlockChiseled.LProperty_FullBlock, isNormalCube ) );
 			}
 		}
 	}
@@ -846,9 +839,9 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 		setBlob( vb );
 		final VoxelBlobStateReference after = getBlobStateReference();
 
-		if ( worldObj != null )
+		if ( world != null )
 		{
-			worldObj.markBlockRangeForRenderUpdate( pos, pos );
+			world.markBlockRangeForRenderUpdate( pos, pos );
 			triggerDynamicUpdates();
 		}
 
@@ -946,7 +939,7 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 	@Override
 	public void invalidate()
 	{
-		if ( worldObj != null )
+		if ( world != null )
 		{
 			triggerDynamicUpdates();
 		}
@@ -962,13 +955,13 @@ public class TileEntityBlockChiseled extends TileEntity implements IChiseledTile
 	{
 		VoxelBlob mask = VoxelBlob.NULL_BLOB;
 
-		if ( worldObj != null )
+		if ( world != null )
 		{
 			mask = new VoxelBlob();
 			MCMultipartProxy.proxyMCMultiPart.addFiller( getWorld(), getPos(), mask );
 		}
 
-		return new BitAccess( worldObj, pos, getBlob(), mask );
+		return new BitAccess( world, pos, getBlob(), mask );
 	}
 
 }

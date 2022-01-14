@@ -71,9 +71,9 @@ public class ActingPlayer
 			lastPlacement = placement;
 			lastPermissionBit = is;
 
-			if ( innerPlayer.canPlayerEdit( pos, side, is ) && innerPlayer.worldObj.isBlockModifiable( innerPlayer, pos ) )
+			if ( innerPlayer.canPlayerEdit( pos, side, is ) && innerPlayer.world.isBlockModifiable( innerPlayer, pos ) )
 			{
-				final EventBlockBitModification event = new EventBlockBitModification( innerPlayer.worldObj, pos, innerPlayer, hand, is, placement );
+				final EventBlockBitModification event = new EventBlockBitModification( innerPlayer.world, pos, innerPlayer, hand, is, placement );
 				MinecraftForge.EVENT_BUS.post( event );
 
 				permissionResult = !event.isCanceled();
@@ -129,7 +129,7 @@ public class ActingPlayer
 
 	public World getWorld()
 	{
-		return innerPlayer.worldObj;
+		return innerPlayer.world;
 	}
 
 	/**

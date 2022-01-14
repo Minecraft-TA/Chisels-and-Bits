@@ -22,8 +22,8 @@ public class CrossWorldBlobSerializer extends BlobSerializer
 	protected int readStateID(
 			final PacketBuffer buffer )
 	{
-		final String name = buffer.readStringFromBuffer( 2047 );
-		buffer.readStringFromBuffer( 2047 );
+		final String name = buffer.readString( 2047 );
+		buffer.readString( 2047 );
 
 		return StringStates.getStateIDFromName( name );
 	}

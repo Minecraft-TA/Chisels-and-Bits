@@ -65,9 +65,9 @@ class SubMaterial extends Material
 	}
 
 	@Override
-	public EnumPushReaction getMobilityFlag()
+	public EnumPushReaction getPushReaction()
 	{
-		return c.getMobilityFlag();
+		return c.getPushReaction();
 	}
 
 	@Override

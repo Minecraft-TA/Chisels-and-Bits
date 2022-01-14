@@ -22,7 +22,7 @@ public class ModCreativeTab extends CreativeTabs
 	}
 
 	@Override
-	public ItemStack getTabIconItem()
+	public ItemStack createIcon()
 	{
 		final ModItems cbitems = ChiselsAndBits.getItems();
 		return new ItemStack( ModUtil.firstNonNull(

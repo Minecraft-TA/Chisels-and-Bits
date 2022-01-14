@@ -27,7 +27,7 @@ public class IMCHandlerKeyBinding implements IMCMessageHandler
 				item = Item.REGISTRY.getObject( new ResourceLocation( name ) );
 
 				// try finding the item in the mod instead...
-				if ( item == null || item == Items.field_190931_a )
+				if ( item == null || item == Items.AIR )
 				{
 					errorName = message.getSender() + ":" + name;
 					item = Item.REGISTRY.getObject( new ResourceLocation( message.getSender(), name ) );
@@ -44,7 +44,7 @@ public class IMCHandlerKeyBinding implements IMCMessageHandler
 				return;
 			}
 
-			if ( item == null || item == Items.field_190931_a )
+			if ( item == null || item == Items.AIR )
 			{
 				throw new RuntimeException( "Unable to locate item " + errorName );
 			}

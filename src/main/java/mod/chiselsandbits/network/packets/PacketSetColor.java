@@ -31,7 +31,7 @@ public class PacketSetColor extends ModPacket
 
 			if ( originalMode != newColor && chatNotification )
 			{
-				Minecraft.getMinecraft().thePlayer.addChatComponentMessage( new TextComponentTranslation( "chiselsandbits.color." + newColor.getUnlocalizedName().toString() ), true );
+				Minecraft.getMinecraft().player.sendStatusMessage( new TextComponentTranslation("chiselsandbits.color." + newColor.getTranslationKey()), true );
 			}
 		}
 	}

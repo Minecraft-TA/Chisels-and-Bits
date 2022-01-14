@@ -26,11 +26,11 @@ public class ChiseledBlockPart extends TileEntityBlockChiseled implements IMulti
 	{
 		if ( world instanceof IMultipartWorld )
 		{
-			getTileEntity().setWorldObj( ( (IMultipartWorld) world ).getActualWorld() );
+			getTileEntity().setWorld( ( (IMultipartWorld) world ).getActualWorld() );
 			return;
 		}
 
-		getTileEntity().setWorldObj( world );
+		getTileEntity().setWorld( world );
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class ChiseledBlockPart extends TileEntityBlockChiseled implements IMulti
 			copyFrom( (TileEntityBlockChiseled) tileEntity );
 
 			// copy pos and world data.
-			setWorldObj( tileEntity.getWorld() );
+			setWorld( tileEntity.getWorld() );
 			setPos( tileEntity.getPos() );
 		}
 	}

@@ -105,7 +105,7 @@ public class ChiselExtrudeIterator extends BaseChiselIterator implements ChiselI
 		final Set<Integer> possiblepositions = new HashSet<Integer>();
 		final List<Integer> selectedpositions = new ArrayList<Integer>();
 
-		final int tx = side.getFrontOffsetX(), ty = side.getFrontOffsetY(), tz = side.getFrontOffsetZ();
+		final int tx = side.getXOffset(), ty = side.getYOffset(), tz = side.getZOffset();
 		int placeoffset = 0;
 
 		int x = sx, y = sy, z = sz;

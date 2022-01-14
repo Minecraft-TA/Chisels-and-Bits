@@ -85,7 +85,7 @@ public class NullInventory implements IInventory
 	}
 
 	@Override
-	public boolean isUseableByPlayer(
+	public boolean isUsableByPlayer(
 			final EntityPlayer player )
 	{
 		return false;
@@ -141,7 +141,7 @@ public class NullInventory implements IInventory
 	}
 
 	@Override
-	public boolean func_191420_l()
+	public boolean isEmpty()
 	{
 		return true;
 	}

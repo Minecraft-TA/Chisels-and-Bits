@@ -95,7 +95,7 @@ public class ChiselCrafting extends CustomRecipe
 	}
 
 	@Override
-	public boolean func_194133_a(
+	public boolean canFit(
 			final int width,
 			final int height )
 	{
@@ -113,7 +113,7 @@ public class ChiselCrafting extends CustomRecipe
 	public NonNullList<ItemStack> getRemainingItems(
 			final InventoryCrafting inv )
 	{
-		final NonNullList<ItemStack> out = NonNullList.func_191197_a( inv.getSizeInventory(), ItemStack.field_190927_a );
+		final NonNullList<ItemStack> out = NonNullList.withSize( inv.getSizeInventory(), ItemStack.EMPTY );
 
 		// just getting this will alter the stacks..
 		final ChiselCraftingRequirements r = getCraftingReqs( inv, false );

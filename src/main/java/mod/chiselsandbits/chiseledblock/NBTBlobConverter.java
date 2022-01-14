@@ -1,7 +1,5 @@
 package mod.chiselsandbits.chiseledblock;
 
-import java.io.IOException;
-
 import mod.chiselsandbits.api.VoxelStats;
 import mod.chiselsandbits.chiseledblock.data.VoxelBlob;
 import mod.chiselsandbits.chiseledblock.data.VoxelBlobStateReference;
@@ -14,6 +12,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
+
+import java.io.IOException;
 
 public class NBTBlobConverter
 {
@@ -250,7 +250,7 @@ public class NBTBlobConverter
 			final NBTTagCompound compound = ModUtil.getSubCompound( is, ModUtil.NBT_BLOCKENTITYTAG, true );
 			writeChisleData( compound, crossWorld );
 
-			if ( !compound.hasNoTags() )
+			if ( !compound.isEmpty() )
 			{
 				return is;
 			}

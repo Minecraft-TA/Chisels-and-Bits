@@ -1,34 +1,10 @@
 package mod.chiselsandbits.chiseledblock.data;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ShortBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.zip.Deflater;
-import java.util.zip.DeflaterOutputStream;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
-import java.util.zip.InflaterInputStream;
-
 import io.netty.buffer.Unpooled;
 import mod.chiselsandbits.api.StateCount;
 import mod.chiselsandbits.api.VoxelStats;
 import mod.chiselsandbits.chiseledblock.BlockBitInfo;
-import mod.chiselsandbits.chiseledblock.serialization.BitStream;
-import mod.chiselsandbits.chiseledblock.serialization.BlobSerializer;
-import mod.chiselsandbits.chiseledblock.serialization.BlobSerilizationCache;
-import mod.chiselsandbits.chiseledblock.serialization.CrossWorldBlobSerializer;
-import mod.chiselsandbits.chiseledblock.serialization.CrossWorldBlobSerializerLegacy;
+import mod.chiselsandbits.chiseledblock.serialization.*;
 import mod.chiselsandbits.client.culling.ICullTest;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.core.Log;
@@ -48,6 +24,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ShortBuffer;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.zip.*;
 
 public final class VoxelBlob implements IVoxelSrc
 {
@@ -552,9 +537,9 @@ public final class VoxelBlob implements IVoxelSrc
 		final int mySpot = get( x, y, z );
 		dest.state = mySpot;
 
-		x += face.getFrontOffsetX();
-		y += face.getFrontOffsetY();
-		z += face.getFrontOffsetZ();
+		x += face.getXOffset();
+		y += face.getYOffset();
+		z += face.getZOffset();
 
 		if ( x >= 0 && x < dim && y >= 0 && y < dim && z >= 0 && z < dim )
 		{
@@ -564,7 +549,7 @@ public final class VoxelBlob implements IVoxelSrc
 		else if ( secondBlob != null )
 		{
 			dest.isEdge = true;
-			dest.visibleFace = cullVisTest.isVisible( mySpot, secondBlob.get( x - face.getFrontOffsetX() * dim, y - face.getFrontOffsetY() * dim, z - face.getFrontOffsetZ() * dim ) );
+			dest.visibleFace = cullVisTest.isVisible( mySpot, secondBlob.get( x - face.getXOffset() * dim, y - face.getYOffset() * dim, z - face.getZOffset() * dim ) );
 		}
 		else
 		{
@@ -905,7 +890,7 @@ public final class VoxelBlob implements IVoxelSrc
 
 		final PacketBuffer header = new PacketBuffer( Unpooled.wrappedBuffer( bb ) );
 
-		final int version = header.readVarIntFromBuffer();
+		final int version = header.readVarInt();
 
 		BlobSerializer bs = null;
 
@@ -926,8 +911,8 @@ public final class VoxelBlob implements IVoxelSrc
 			throw new RuntimeException( "Invalid Version: " + version );
 		}
 
-		final int byteOffset = header.readVarIntFromBuffer();
-		final int bytesOfInterest = header.readVarIntFromBuffer();
+		final int byteOffset = header.readVarInt();
+		final int bytesOfInterest = header.readVarInt();
 
 		final BitStream bits = BitStream.valueOf( byteOffset, ByteBuffer.wrap( bb.array(), header.readerIndex(), bytesOfInterest ) );
 		for ( int x = 0; x < array_size; x++ )
@@ -986,7 +971,7 @@ public final class VoxelBlob implements IVoxelSrc
 			final DeflaterOutputStream w = new DeflaterOutputStream( o, def, bestBufferSize );
 
 			final PacketBuffer pb = BlobSerilizationCache.getCachePacketBuffer();
-			pb.writeVarIntToBuffer( bs.getVersion() );
+			pb.writeVarInt( bs.getVersion() );
 			bs.write( pb );
 
 			final BitStream set = BlobSerilizationCache.getCacheBitStream();
@@ -999,8 +984,8 @@ public final class VoxelBlob implements IVoxelSrc
 			final int bytesToWrite = arrayContents.length;
 			final int byteOffset = set.byteOffset();
 
-			pb.writeVarIntToBuffer( byteOffset );
-			pb.writeVarIntToBuffer( bytesToWrite - byteOffset );
+			pb.writeVarInt( byteOffset );
+			pb.writeVarInt( bytesToWrite - byteOffset );
 
 			w.write( pb.array(), 0, pb.writerIndex() );
 

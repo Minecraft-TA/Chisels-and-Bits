@@ -1,15 +1,15 @@
 package mod.chiselsandbits.core.api;
 
-import java.lang.annotation.Annotation;
-import java.util.Arrays;
-import java.util.List;
-
 import mod.chiselsandbits.api.KeyBindingContext;
 import mod.chiselsandbits.client.ModConflictContext;
 import mod.chiselsandbits.core.Log;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInterModComms.IMCMessage;
+
+import java.lang.annotation.Annotation;
+import java.util.Arrays;
+import java.util.List;
 
 public class IMCHandlerKeyBindingAnnotations implements IMCMessageHandler
 {
@@ -30,7 +30,7 @@ public class IMCHandlerKeyBindingAnnotations implements IMCMessageHandler
 			{
 				regName = item.getRegistryName();
 
-				if ( regName == null || !regName.getResourceDomain().equals( message.getSender() ) )
+				if ( regName == null || !regName.getNamespace().equals( message.getSender() ) )
 				{
 					continue;
 				}
@@ -59,7 +59,7 @@ public class IMCHandlerKeyBindingAnnotations implements IMCMessageHandler
 					}
 
 					itemClass = itemClass.getSuperclass();
-				}				
+				}
 			}
 
 			if ( !found )

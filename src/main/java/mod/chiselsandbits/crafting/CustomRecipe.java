@@ -35,7 +35,7 @@ public abstract class CustomRecipe implements IRecipe
 	}
 
 	@Override
-	public boolean func_192399_d()
+	public boolean isDynamic()
 	{
 		return true; // hide recipe
 	}
