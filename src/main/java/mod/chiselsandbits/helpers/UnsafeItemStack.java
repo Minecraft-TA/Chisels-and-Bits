@@ -25,6 +25,22 @@ public class UnsafeItemStack {
         }
     }
 
+    public static ItemStack copy(ItemStack stack) {
+        ItemStack itemStack = create(stack.getItem(), stack.func_190916_E(), stack.getItemDamage());
+        //setAnimationsToGo
+        itemStack.func_190915_d(itemStack.func_190921_D());
+
+        if (stack.getTagCompound() != null) {
+            itemStack.setTagCompound(stack.getTagCompound().copy());
+        }
+
+        return itemStack;
+    }
+
+    public static ItemStack create(Item itemIn, int amount) {
+        return create(itemIn, amount, 0);
+    }
+
     public static ItemStack create(Item itemIn, int amount, int meta) {
         Unsafe unsafe = UnsafeAccess.UNSAFE;
         try {

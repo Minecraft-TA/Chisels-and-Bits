@@ -5,6 +5,7 @@ import mod.chiselsandbits.api.ItemType;
 import mod.chiselsandbits.core.ChiselsAndBits;
 import mod.chiselsandbits.helpers.DeprecationHelper;
 import mod.chiselsandbits.helpers.ModUtil;
+import mod.chiselsandbits.helpers.UnsafeItemStack;
 import mod.chiselsandbits.items.ItemChiseledBit;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -132,29 +133,24 @@ public class TileEntityBitTank extends TileEntity implements IItemHandler, IFlui
     public ItemStack getStackInSlot(
             final int slot) {
         if (bits > 0 && slot == 0) {
-            return getFluidBitStack(myFluid, bits);
+            return getFluidBitStackUnsafe(myFluid, bits);
         }
 
         return ModUtil.getEmptyStack();
     }
 
-    public @Nonnull
-    ItemStack getFluidBitStack(
-            final Fluid liquid,
-            final int amount) {
+    @Nonnull
+    public ItemStack getFluidBitStackUnsafe(Fluid liquid, int amount) {
         if (liquid == null || liquid.getBlock() == null) {
             return ModUtil.getEmptyStack();
         }
 
-        return ItemChiseledBit.createStack(ModUtil.getStateId(liquid.getBlock().getDefaultState()), amount, false);
+        return ItemChiseledBit.createStackUnsafe(ModUtil.getStateId(liquid.getBlock().getDefaultState()), amount, false);
     }
 
+    @Nonnull
     @Override
-    public @Nonnull
-    ItemStack insertItem(
-            final int slot,
-            final ItemStack stack,
-            final boolean simulate) {
+    public ItemStack insertItem(final int slot, final ItemStack stack, final boolean simulate) {
         if (!ModUtil.isEmpty(stack) && stack.getItem() instanceof ItemChiseledBit) {
             final int state = ItemChiseledBit.getStackState(stack);
             final IBlockState blk = ModUtil.getStateById(state);
@@ -171,7 +167,7 @@ public class TileEntityBitTank extends TileEntity implements IItemHandler, IFlui
                 return stack;
             }
 
-            final ItemStack bitItem = getFluidBitStack(myFluid, bits);
+            final ItemStack bitItem = getFluidBitStackUnsafe(myFluid, bits);
             final boolean canInsert = ModUtil.isEmpty(bitItem) || ItemStack.areItemStackTagsEqual(bitItem, stack) && bitItem.getItem() == stack.getItem();
 
             if (canInsert) {
@@ -191,7 +187,7 @@ public class TileEntityBitTank extends TileEntity implements IItemHandler, IFlui
                 }
 
                 if (amount < merged) {
-                    final ItemStack out = ModUtil.copy(stack);
+                    final ItemStack out = UnsafeItemStack.copy(stack);
                     ModUtil.setStackSize(out, merged - amount);
                     return out;
                 }
@@ -202,14 +198,22 @@ public class TileEntityBitTank extends TileEntity implements IItemHandler, IFlui
         return stack;
     }
 
+    private long lastKnownTick = -1;
+
     private void saveAndUpdate() {
         markDirty();
-        ModUtil.sendUpdate(worldObj, getPos());
 
-        final int lv = getLightValue();
-        if (oldLV != lv) {
-            getWorld().checkLight(getPos());
-            oldLV = lv;
+        long currentTick = this.worldObj.getTotalWorldTime();
+        if (lastKnownTick != currentTick) {
+            this.lastKnownTick = currentTick;
+
+            ModUtil.sendUpdate(worldObj, getPos());
+
+            final int lv = getLightValue();
+            if (oldLV != lv) {
+                getWorld().checkLight(getPos());
+                oldLV = lv;
+            }
         }
     }
 
@@ -384,7 +388,7 @@ public class TileEntityBitTank extends TileEntity implements IItemHandler, IFlui
 
         if (possibleAmount > 0) {
             final int bitCount = possibleAmount * TileEntityBitTank.BITS_PER_MB_CONVERSION / TileEntityBitTank.MB_PER_BIT_CONVERSION;
-            final ItemStack bitItems = getFluidBitStack(resource.getFluid(), bitCount);
+            final ItemStack bitItems = getFluidBitStackUnsafe(resource.getFluid(), bitCount);
             final ItemStack leftOver = insertItem(0, bitItems, !doFill);
 
             if (ModUtil.isEmpty(leftOver)) {

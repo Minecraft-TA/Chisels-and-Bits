@@ -356,6 +356,19 @@ public class ItemChiseledBit extends Item implements IItemScrollWheel, IChiselMo
         return out;
     }
 
+    @Nonnull
+    public static ItemStack createStackUnsafe(final int id, final int count, final boolean requireStack) {
+        if (ChiselsAndBits.getItems().itemBlockBit == null) {
+            if (!requireStack) {
+                return ModUtil.getEmptyStack();
+            }
+        }
+
+        final ItemStack out = UnsafeItemStack.create(ChiselsAndBits.getItems().itemBlockBit, count);
+        out.setTagInfo("id", new NBTTagInt(id));
+        return out;
+    }
+
     @Override
     public void scroll(
             final EntityPlayer player,
