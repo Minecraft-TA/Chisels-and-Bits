@@ -18,6 +18,7 @@ public class UnsafeItemStack {
             ITEM_FIELD_OFFSET = unsafe.objectFieldOffset(ItemStack.class.getDeclaredField("item"));
             ITEMDAMAGE_FIELD_OFFSET = unsafe.objectFieldOffset(ItemStack.class.getDeclaredField("itemDamage"));
             STACKSIZE_FIELD_OFFSET = unsafe.objectFieldOffset(ItemStack.class.getDeclaredField("stackSize"));
+            //isEmpty
             ISEMPTY_FIELD_OFFSET = unsafe.objectFieldOffset(ItemStack.class.getDeclaredField("field_190928_g"));
             DELEGATE_FIELD_OFFSET = unsafe.objectFieldOffset(ItemStack.class.getDeclaredField("delegate"));
         } catch (Throwable e) {
@@ -26,8 +27,9 @@ public class UnsafeItemStack {
     }
 
     public static ItemStack copy(ItemStack stack) {
+        //getCount()
         ItemStack itemStack = create(stack.getItem(), stack.func_190916_E(), stack.getItemDamage());
-        //setAnimationsToGo
+        //setAnimationsToGo() and getAnimationsToGo()
         itemStack.func_190915_d(itemStack.func_190921_D());
 
         if (stack.getTagCompound() != null) {
@@ -49,6 +51,7 @@ public class UnsafeItemStack {
             unsafe.putInt(instance, ITEMDAMAGE_FIELD_OFFSET, meta);
             unsafe.putInt(instance, STACKSIZE_FIELD_OFFSET, amount);
             unsafe.putObject(instance, DELEGATE_FIELD_OFFSET, itemIn.delegate);
+            //isEmpty()
             unsafe.putBoolean(instance, ISEMPTY_FIELD_OFFSET, instance.func_190926_b());
             return instance;
         } catch (InstantiationException e) {
